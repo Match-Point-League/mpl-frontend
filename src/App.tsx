@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './App.css';
 import { HealthCheckResponse } from './types/api';
 
