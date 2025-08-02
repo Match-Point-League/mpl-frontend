@@ -20,7 +20,7 @@ function App() {
   useEffect(() => {
     const healthCheck = async () => {
       setIsLoading(true);
-      const response = await fetch('http://localhost:8080/api/v1/health');
+      const response = await fetch(import.meta.env.VITE_API_URL + '/health');
       const data = await response.json();
       setHealthCheck(data.data);
       setIsLoading(false);
