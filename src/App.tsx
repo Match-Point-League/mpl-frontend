@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './App.css';
 import { HealthCheckResponse } from './types/api';
 
@@ -20,7 +20,7 @@ function App() {
   useEffect(() => {
     const healthCheck = async () => {
       setIsLoading(true);
-      const response = await fetch('http://localhost:8080/api/v1/health');
+      const response = await fetch(import.meta.env.VITE_API_URL + '/health');
       const data = await response.json();
       setHealthCheck(data.data);
       setIsLoading(false);
