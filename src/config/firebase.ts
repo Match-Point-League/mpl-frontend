@@ -6,6 +6,7 @@ import { getAuth } from "firebase/auth";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // This web app's Firebase configuration
+// TODO: shiift some sensitive info to .env
 const firebaseConfig = {
   apiKey: "AIzaSyD53dlcmYrEFrfGGK2VgebhSxMNWpR7_Bk",
   authDomain: "match-point-league-project.firebaseapp.com",
