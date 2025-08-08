@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { FormData, FormErrors } from '../types/registration';
+import { RegistrationFormData, RegistrationErrors, RegistrationResponse } from '../types/registration';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
 
 export const useSignUpForm = () => {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<RegistrationFormData>({
     fullName: '',
     email: '',
     confirmEmail: '',
@@ -15,13 +15,13 @@ export const useSignUpForm = () => {
     skillLevel: 2.5,
     zipCode: ''
   });
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<RegistrationErrors>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
   const [cityName, setCityName] = useState('');
 
   // Centralized error handling function for setting the city name
-  const handleError = (error: string, field?: keyof FormErrors) => {
+  const handleError = (error: string, field?: keyof RegistrationErrors) => {
     setCityName('');
     if (field) {
       setErrors(prev => ({
@@ -37,7 +37,7 @@ export const useSignUpForm = () => {
   };
 
   // Clear specific error
-  const clearError = (field: keyof FormErrors) => {
+  const clearError = (field: keyof RegistrationErrors) => {
     setErrors(prev => ({
       ...prev,
       [field]: undefined
@@ -82,7 +82,7 @@ export const useSignUpForm = () => {
   }, [formData.zipCode]);
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
+    const newErrors: RegistrationErrors = {};
 
     // Full name validation
     if (!formData.fullName.trim()) {
@@ -161,8 +161,8 @@ export const useSignUpForm = () => {
     }));
     
     // Clear error when user starts typing
-    if (errors[name as keyof FormErrors]) {
-      clearError(name as keyof FormErrors);
+    if (errors[name as keyof RegistrationErrors]) {
+      clearError(name as keyof RegistrationErrors);
     }
   };
 
@@ -214,7 +214,7 @@ export const useSignUpForm = () => {
     setSuccess('');
 
     try {
-      // Call the backend API endpoint that handles both Firebase and PostgreSQL
+      // Call the backend API endpoint
       const response = await fetch(`${API_BASE_URL}/auth/signup`, {
         method: 'POST',
         headers: {
@@ -232,7 +232,7 @@ export const useSignUpForm = () => {
         }),
       });
 
-      const data = await response.json();
+      const data: RegistrationResponse = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || 'Sign up failed');
