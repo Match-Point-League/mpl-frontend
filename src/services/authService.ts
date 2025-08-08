@@ -15,7 +15,7 @@ export async function signUp(formData: RegistrationFormData, cityName?: string):
         password: formData.password,
         fullName: formData.fullName,
         displayName: formData.displayName,
-        sportsInterested: formData.sportsInterested,
+        preferredSports: formData.preferredSports,
         skillLevel: formData.skillLevel,
         zipCode: formData.zipCode,
         cityName: cityName
