@@ -1,17 +1,18 @@
 // Generate display name options based on full name
 export const generateDisplayNameOptions = (fullName: string): string[] => {
-  if (!fullName.trim()) return [];
+  const trimmedFullName = fullName.trim();
+  if (!trimmedFullName) return [];
   
-  const names = fullName.trim().split(' ');
-  if (names.length < 2) return [fullName.trim()];
+  const names = trimmedFullName.split(' ');
+  if (names.length < 2) return [trimmedFullName];
   
   const firstName = names[0];
   const lastName = names[names.length - 1];
   
   // Options for display name dropdown
   const options = [
-    fullName.trim(), // "Jane Doe"
-    `${firstName} ${lastName}`, // "Jane Doe" (if multiple middle names)
+    trimmedFullName, // "Jane Doe"
+    `${firstName} ${lastName}`, // "Jane Doe"
     `${firstName[0]}. ${lastName}`, // "J. Doe"
     `${firstName} ${lastName[0]}.`, // "Jane D."
     firstName // "Jane"
