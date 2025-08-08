@@ -23,8 +23,6 @@ export const generateDisplayNameOptions = (fullName: string): string[] => {
 };
 
 // Get skill level description
-// TODO: Add tooltip instead?
-// TODO: Change descriptions?
 export const getSkillLevelDescription = (level: number): string => {
   if (level <= 1.5) return 'Beginner';
   if (level <= 2.5) return 'Advanced Beginner';
