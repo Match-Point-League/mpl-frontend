@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
-import { HealthCheckResponse } from './types/api';
 import SignUpPage from './pages/SignUpPage';
 import SignInPage from './pages/SignInPage';
 
@@ -17,24 +16,6 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  const [healthCheck, setHealthCheck] = useState<HealthCheckResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
-    const healthCheck = async () => {
-      setIsLoading(true);
-      const response = await fetch(import.meta.env.VITE_API_URL + '/health');
-      const data = await response.json();
-      setHealthCheck(data.data);
-      setIsLoading(false);
-    };
-    healthCheck();
-  }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
@@ -46,7 +27,7 @@ function App() {
               <header className="bg-white shadow">
                 <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                   <h1 className="text-3xl font-bold text-gray-900">
-                    Match Point League: {healthCheck?.status}
+                    Match Point League
                   </h1>
                 </div>
               </header>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FormData, FormErrors } from '../types/registration';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
+import { signUp } from '../services/authService';
 
 export const useSignUpForm = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -100,22 +99,16 @@ export const useSignUpForm = () => {
       newErrors.displayName = 'Please select a display name';
     }
 
-    // Sports interested validation
+    // Sports validation
     if (formData.sportsInterested.length === 0) {
       newErrors.sportsInterested = 'Please select at least one sport';
     }
 
-    // Skill level validation
-    if (formData.skillLevel === 0) {
-      newErrors.skillLevel = 'Please select your skill level';
-    }
-
     // ZIP code validation
-    const zipRegex = /^\d{5}(-\d{4})?$/;
     if (!formData.zipCode) {
       newErrors.zipCode = 'ZIP code is required';
-    } else if (!zipRegex.test(formData.zipCode)) {
-      newErrors.zipCode = 'Please enter a valid ZIP code';
+    } else if (!/^\d{5}$/.test(formData.zipCode)) {
+      newErrors.zipCode = 'Please enter a valid 5-digit ZIP code';
     }
 
     setErrors(newErrors);
@@ -124,13 +117,9 @@ export const useSignUpForm = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    
-    // Convert skillLevel to number if it's the skillLevel field
-    const processedValue = name === 'skillLevel' ? parseFloat(value) || 0 : value;
-    
     setFormData(prev => ({
       ...prev,
-      [name]: processedValue
+      [name]: value
     }));
     
     // Clear error when user starts typing
@@ -196,31 +185,10 @@ export const useSignUpForm = () => {
     setSuccess('');
 
     try {
-      // Call the backend API endpoint that handles both Firebase and PostgreSQL
-      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          fullName: formData.fullName,
-          displayName: formData.displayName,
-          sportsInterested: formData.sportsInterested,
-          skillLevel: formData.skillLevel,
-          zipCode: formData.zipCode,
-          cityName: cityName
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Sign up failed');
-      }
-
-      setSuccess(data.message || 'Account created successfully!');
+      // Use Firebase authentication for sign up
+      await signUp(formData.email, formData.password);
+      
+      setSuccess('Account created successfully!');
       setFormData({
         fullName: '',
         email: '',
