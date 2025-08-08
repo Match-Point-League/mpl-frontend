@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { signUp } from '../services/authService';
 import { FormData, FormErrors } from '../types/registration';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
 
 export const useSignUpForm = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -195,8 +196,31 @@ export const useSignUpForm = () => {
     setSuccess('');
 
     try {
-      await signUp(formData.email, formData.password);
-      setSuccess('Account created successfully!');
+      // Call the backend API endpoint that handles both Firebase and PostgreSQL
+      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          fullName: formData.fullName,
+          displayName: formData.displayName,
+          sportsInterested: formData.sportsInterested,
+          skillLevel: formData.skillLevel,
+          zipCode: formData.zipCode,
+          cityName: cityName
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Sign up failed');
+      }
+
+      setSuccess(data.message || 'Account created successfully!');
       setFormData({
         fullName: '',
         email: '',
@@ -229,4 +253,4 @@ export const useSignUpForm = () => {
     handleSportsSelection,
     handleSubmit
   };
-}; 
+};
