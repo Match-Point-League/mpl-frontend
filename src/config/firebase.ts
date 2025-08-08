@@ -7,13 +7,13 @@ import { getAuth } from "firebase/auth";
 
 // This web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyD53dlcmYrEFrfGGK2VgebhSxMNWpR7_Bk",
-  authDomain: "match-point-league-project.firebaseapp.com",
-  projectId: "match-point-league-project",
-  storageBucket: "match-point-league-project.firebasestorage.app",
-  messagingSenderId: "376639051132",
-  appId: "1:376639051132:web:65e8ca53f1b6008042c0f9",
-  measurementId: "G-XT3ZCNTJFG"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
