@@ -1,0 +1,412 @@
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.welcome-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.welcome-banner h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.skill-level {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.stats span {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn.primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.action-btn.primary:hover {
+  background-color: #2563eb;
+}
+
+.action-btn.secondary {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.action-btn.secondary:hover {
+  background-color: #d1d5db;
+}
+
+.tab-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tab-header {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 1rem 2rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+  color: #3b82f6;
+  background-color: white;
+  border-bottom: 2px solid #3b82f6;
+}
+
+.tab-btn:hover:not(.active) {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.tab-content {
+  padding: 2rem;
+}
+
+.profile-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.settings-section {
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 1.5rem;
+}
+
+.settings-section h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.form-group input:read-only,
+.form-group select:disabled {
+  background-color: #f9fafb;
+  color: #6b7280;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+}
+
+.settings-section button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: #3b82f6;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.settings-section button:hover {
+  background-color: #2563eb;
+}
+
+.danger-zone {
+  border-color: #fca5a5;
+  background-color: #fef2f2;
+}
+
+.logout-btn {
+  background-color: #6b7280 !important;
+  margin-right: 1rem;
+}
+
+.logout-btn:hover {
+  background-color: #4b5563 !important;
+}
+
+.delete-btn {
+  background-color: #ef4444 !important;
+}
+
+.delete-btn:hover {
+  background-color: #dc2626 !important;
+}
+
+.matches-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.matches-section h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.no-matches {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 2rem;
+}
+
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.match-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: white;
+}
+
+.match-card.upcoming {
+  border-left: 4px solid #3b82f6;
+}
+
+.match-card.won {
+  border-left: 4px solid #10b981;
+}
+
+.match-card.lost {
+  border-left: 4px solid #ef4444;
+}
+
+.match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.match-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status.pending {
+  background-color: #fbbf24;
+  color: #78350f;
+}
+
+.status.confirmed {
+  background-color: #10b981;
+  color: white;
+}
+
+.result {
+  padding: 0.5rem;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1.1rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result.win {
+  background-color: #10b981;
+  color: white;
+}
+
+.result.loss {
+  background-color: #ef4444;
+  color: white;
+}
+
+.match-details {
+  margin-bottom: 1rem;
+}
+
+.match-details p {
+  margin: 0.25rem 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.match-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.match-actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confirm-btn {
+  background-color: #10b981;
+  color: white;
+}
+
+.confirm-btn:hover {
+  background-color: #059669;
+}
+
+.reject-btn {
+  background-color: #ef4444;
+  color: white;
+}
+
+.reject-btn:hover {
+  background-color: #dc2626;
+}
+
+.reschedule-btn {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.reschedule-btn:hover {
+  background-color: #d97706;
+}
+
+.cancel-btn {
+  background-color: #6b7280;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #4b5563;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1rem;
+  }
+
+  .welcome-banner h1 {
+    font-size: 1.5rem;
+  }
+
+  .user-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .tab-header {
+    flex-direction: column;
+  }
+
+  .tab-content {
+    padding: 1rem;
+  }
+
+  .match-actions {
+    flex-direction: column;
+  }
+
+  .match-actions button {
+    width: 100%;
+  }
+}
