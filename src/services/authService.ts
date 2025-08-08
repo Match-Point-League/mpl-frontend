@@ -18,7 +18,6 @@ export async function signUp(email: string, password: string): Promise<UserCrede
       case 'auth/invalid-email':
         throw new Error('Invalid email address');
       case 'auth/weak-password':
-        // TODO: keep this?
         throw new Error('Password should be at least 6 characters');
       default:
         throw new Error('Sign up failed. Please try again.');
