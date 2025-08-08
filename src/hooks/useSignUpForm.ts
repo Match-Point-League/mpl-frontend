@@ -82,11 +82,12 @@ export const useSignUpForm = () => {
 
   const validateForm = (): boolean => {
     const newErrors: RegistrationErrors = {};
+    const trimmedFullName = formData.fullName.trim();
 
     // Full name validation
-    if (!formData.fullName.trim()) {
+    if (!trimmedFullName) {
       newErrors.fullName = 'Full name is required';
-    } else if (formData.fullName.trim().length < 2) {
+    } else if (trimmedFullName.length < 2) {
       newErrors.fullName = 'Full name must be at least 2 characters';
     }
 
