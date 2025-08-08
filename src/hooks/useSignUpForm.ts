@@ -20,35 +20,62 @@ export const useSignUpForm = () => {
   const [success, setSuccess] = useState('');
   const [cityName, setCityName] = useState('');
 
+  // Centralized error handling function for setting the city name
+  const handleError = (error: string, field?: keyof FormErrors) => {
+    setCityName('');
+    if (field) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: error
+      }));
+    } else {
+      setErrors(prev => ({
+        ...prev,
+        general: error
+      }));
+    }
+  };
+
+  // Clear specific error
+  const clearError = (field: keyof FormErrors) => {
+    setErrors(prev => ({
+      ...prev,
+      [field]: undefined
+    }));
+  };
+
   // Fetch city name from ZIP code
   const fetchCityFromZip = async (zipCode: string) => {
-    if (zipCode.length === 5) {
-      try {
-        const response = await fetch(`https://api.zippopotam.us/US/${zipCode}`);
-        if (response.ok) {
-          const data = await response.json();
-          const city = data.places[0]['place name'];
-          const state = data.places[0]['state abbreviation'];
-          setCityName(`${city}, ${state}`);
-        } else {
-          setCityName('');
-        }
-      } catch (error) {
-        setCityName('');
-      }
-    } else {
+    if (zipCode.length !== 5) {
       setCityName('');
+      clearError('zipCode');
+      return;
+    }
+
+    let success = false;
+    try {
+      const response = await fetch(`https://api.zippopotam.us/US/${zipCode}`);
+      if (response.ok) {
+        const data = await response.json();
+        const city = data.places[0]['place name'];
+        const state = data.places[0]['state abbreviation'];
+        setCityName(`${city}, ${state}`);
+        clearError('zipCode');
+        success = true;
+      }
+    } catch (error) {
+      // Do nothing, let the error handling below handle it
+    }
+
+    if (!success) {
+      handleError('Invalid ZIP code', 'zipCode');
     }
   };
 
   // Debounced ZIP code lookup
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (formData.zipCode.length === 5) {
-        fetchCityFromZip(formData.zipCode);
-      } else {
-        setCityName('');
-      }
+      fetchCityFromZip(formData.zipCode);
     }, 500);
 
     return () => clearTimeout(timeoutId);
@@ -135,10 +162,7 @@ export const useSignUpForm = () => {
     
     // Clear error when user starts typing
     if (errors[name as keyof FormErrors]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: undefined
-      }));
+      clearError(name as keyof FormErrors);
     }
   };
 
@@ -150,10 +174,7 @@ export const useSignUpForm = () => {
     }));
     
     if (errors.skillLevel) {
-      setErrors(prev => ({
-        ...prev,
-        skillLevel: undefined
-      }));
+      clearError('skillLevel');
     }
   };
 
@@ -177,10 +198,7 @@ export const useSignUpForm = () => {
     });
     
     if (errors.sportsInterested) {
-      setErrors(prev => ({
-        ...prev,
-        sportsInterested: undefined
-      }));
+      clearError('sportsInterested');
     }
   };
 
@@ -232,11 +250,9 @@ export const useSignUpForm = () => {
         skillLevel: 2.5,
         zipCode: ''
       });
-      setCityName('');
+      setCityName(''); 
     } catch (err: any) {
-      setErrors({
-        general: err.message || 'Sign up failed'
-      });
+      handleError(err.message || 'Sign up failed');
     } finally {
       setLoading(false);
     }
