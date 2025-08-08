@@ -26,7 +26,7 @@ const SignInPage: React.FC = () => {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white text-gray-500">
-                  Don't have an account?
+                  New to MPL?
                 </span>
               </div>
             </div>
@@ -36,7 +36,7 @@ const SignInPage: React.FC = () => {
                 to="/signup"
                 className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                Create a new account
+                Join Today
               </Link>
             </div>
           </div>
