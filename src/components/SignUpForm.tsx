@@ -138,15 +138,15 @@ const SignUpForm: React.FC = () => {
               type="button"
               onClick={() => handleSportsSelection(sport)}
               className={`sports-tab ${
-                formData.sportsInterested.includes(sport) ? 'active' : ''
+                formData.preferredSports.includes(sport) ? 'active' : ''
               }`}
             >
               {sport.charAt(0).toUpperCase() + sport.slice(1)}
             </button>
           ))}
         </div>
-        {errors.sportsInterested && (
-          <p className="mt-1 text-sm text-red-600">{errors.sportsInterested}</p>
+        {errors.preferredSports && (
+          <p className="mt-1 text-sm text-red-600">{errors.preferredSports}</p>
         )}
       </div>
 

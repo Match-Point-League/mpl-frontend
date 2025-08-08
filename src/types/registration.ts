@@ -8,7 +8,7 @@ export interface RegistrationFormData {
   password: string;
   confirmPassword: string;
   displayName: string;
-  sportsInterested: string[];
+  preferredSports: string[];
   skillLevel: number;
   zipCode: string;
 }
@@ -23,7 +23,7 @@ export interface RegistrationErrors {
   password?: string;
   confirmPassword?: string;
   displayName?: string;
-  sportsInterested?: string;
+  preferredSports?: string;
   skillLevel?: string;
   zipCode?: string;
   general?: string;

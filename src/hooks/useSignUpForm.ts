@@ -10,7 +10,7 @@ export const useSignUpForm = () => {
     password: '',
     confirmPassword: '',
     displayName: '',
-    sportsInterested: [],
+    preferredSports: [],
     skillLevel: 2.5,
     zipCode: ''
   });
@@ -127,8 +127,8 @@ export const useSignUpForm = () => {
     }
 
     // Sports interested validation
-    if (formData.sportsInterested.length === 0) {
-      newErrors.sportsInterested = 'Please select at least one sport';
+    if (formData.preferredSports.length === 0) {
+      newErrors.preferredSports = 'Please select at least one sport';
     }
 
     // Skill level validation
@@ -179,7 +179,7 @@ export const useSignUpForm = () => {
 
   const handleSportsSelection = (sport: string) => {
     setFormData(prev => {
-      const currentSports = [...prev.sportsInterested];
+      const currentSports = [...prev.preferredSports];
       const sportIndex = currentSports.indexOf(sport);
       
       if (sportIndex > -1) {
@@ -192,12 +192,12 @@ export const useSignUpForm = () => {
       
       return {
         ...prev,
-        sportsInterested: currentSports
+        preferredSports: currentSports
       };
     });
     
-    if (errors.sportsInterested) {
-      clearError('sportsInterested');
+    if (errors.preferredSports) {
+      clearError('preferredSports');
     }
   };
 
@@ -224,7 +224,7 @@ export const useSignUpForm = () => {
         password: '',
         confirmPassword: '',
         displayName: '',
-        sportsInterested: [],
+        preferredSports: [],
         skillLevel: 2.5,
         zipCode: ''
       });
