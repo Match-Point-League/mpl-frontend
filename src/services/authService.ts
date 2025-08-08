@@ -1,73 +1,65 @@
-import { auth } from "../config/firebase";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  sendPasswordResetEmail,
-  UserCredential
-} from "firebase/auth";
+import { RegistrationFormData, RegistrationResponse } from "../types/registration";
 
-// Sign up with email and password
-export async function signUp(email: string, password: string): Promise<UserCredential> {
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
+
+// Sign up with backend API
+export async function signUp(formData: RegistrationFormData, cityName?: string): Promise<RegistrationResponse> {
   try {
-    return await createUserWithEmailAndPassword(auth, email, password);
-  } catch (error: any) {
-    switch (error.code) {
-      case 'auth/email-already-in-use':
-        throw new Error('Email is already registered');
-      case 'auth/invalid-email':
-        throw new Error('Invalid email address');
-      case 'auth/weak-password':
-        throw new Error('Password should be at least 6 characters');
-      default:
-        throw new Error('Sign up failed. Please try again.');
+    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password,
+        fullName: formData.fullName,
+        displayName: formData.displayName,
+        sportsInterested: formData.sportsInterested,
+        skillLevel: formData.skillLevel,
+        zipCode: formData.zipCode,
+        cityName: cityName
+      }),
+    });
+
+    const data: RegistrationResponse = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Sign up failed');
     }
+
+    return data;
+  } catch (error: any) {
+    throw new Error(error.message || 'Sign up failed. Please try again.');
   }
 }
 
-// Sign in with email and password
-export async function signIn(email: string, password: string): Promise<UserCredential> {
+// Sign in with email and password (placeholder for future implementation)
+export async function signIn(email: string, password: string): Promise<any> {
   try {
-    return await signInWithEmailAndPassword(auth, email, password);
+    // TODO: Implement backend sign-in endpoint
+    throw new Error('Sign in not implemented yet');
   } catch (error: any) {
-    switch (error.code) {
-      case 'auth/user-not-found':
-        throw new Error('No account found with this email');
-      case 'auth/wrong-password':
-        throw new Error('Incorrect password');
-      case 'auth/invalid-email':
-        throw new Error('Invalid email address');
-      case 'auth/too-many-requests':
-        throw new Error('Too many failed attempts. Please try again later');
-      default:
-        throw new Error('Sign in failed. Please try again.');
-    }
+    throw new Error('Sign in failed. Please try again.');
   }
 }
 
-// Sign out
+// Sign out (placeholder for future implementation)
 export async function signOut(): Promise<void> {
   try {
-    return await firebaseSignOut(auth);
+    // TODO: Implement backend sign-out endpoint
+    throw new Error('Sign out not implemented yet');
   } catch (error: any) {
     throw new Error('Sign out failed. Please try again.');
   }
 }
 
-// Send password reset email
+// Send password reset email (placeholder for future implementation)
 export async function resetPassword(email: string): Promise<void> {
   try {
-    return await sendPasswordResetEmail(auth, email);
+    // TODO: Implement backend password reset endpoint
+    throw new Error('Password reset not implemented yet');
   } catch (error: any) {
-    switch (error.code) {
-      case 'auth/user-not-found':
-        throw new Error('No account found with this email');
-      case 'auth/invalid-email':
-        throw new Error('Invalid email address');
-      case 'auth/too-many-requests':
-        throw new Error('Too many requests. Please try again later');
-      default:
-        throw new Error('Failed to send reset email. Please try again.');
-    }
+    throw new Error('Failed to send reset email. Please try again.');
   }
 }

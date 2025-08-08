@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { RegistrationFormData, RegistrationErrors, RegistrationResponse } from '../types/registration';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
+import { signUp } from '../services/authService';
 
 export const useSignUpForm = () => {
   const [formData, setFormData] = useState<RegistrationFormData>({
@@ -214,29 +213,8 @@ export const useSignUpForm = () => {
     setSuccess('');
 
     try {
-      // Call the backend API endpoint
-      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          fullName: formData.fullName,
-          displayName: formData.displayName,
-          sportsInterested: formData.sportsInterested,
-          skillLevel: formData.skillLevel,
-          zipCode: formData.zipCode,
-          cityName: cityName
-        }),
-      });
-
-      const data: RegistrationResponse = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Sign up failed');
-      }
+      // Use the authService signUp function
+      const data = await signUp(formData, cityName);
 
       setSuccess(data.message || 'Account created successfully!');
       setFormData({
