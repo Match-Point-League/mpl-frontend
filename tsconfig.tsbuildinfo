@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/signupform.tsx","./src/config/api.ts","./src/config/firebase.ts","./src/hooks/usesignupform.ts","./src/pages/signuppage.tsx","./src/services/authservice.ts","./src/services/healthservice.ts","./src/types/api.ts","./src/types/registration.ts","./src/utils/registrationformutils.ts"],"version":"5.8.3"}

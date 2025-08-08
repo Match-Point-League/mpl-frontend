@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import { HealthCheckResponse } from './types/api';
 import SignUpPage from './pages/SignUpPage';
+import SignInPage from './pages/SignInPage';
 
 // Initialize React Query client
 const queryClient = new QueryClient({
@@ -39,6 +40,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/signin" element={<SignInPage />} />
           <Route path="/" element={
             <div className="min-h-screen bg-gray-50">
               <header className="bg-white shadow">
@@ -56,12 +58,20 @@ function App() {
                         Infrastructure setup complete. Ready for feature development.
                       </p>
                       
-                      <Link
-                        to="/signup"
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                      >
-                        Sign Up
-                      </Link>
+                      <div className="flex space-x-4">
+                        <Link
+                          to="/signin"
+                          className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                        >
+                          Sign In
+                        </Link>
+                        <Link
+                          to="/signup"
+                          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                        >
+                          Sign Up
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
