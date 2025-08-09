@@ -62,4 +62,5 @@ export interface RegistrationResponse {
       cityInfo?: ZipCodeResponse;
     };
   };
+  validationErrors?: RegistrationErrors;
 } 

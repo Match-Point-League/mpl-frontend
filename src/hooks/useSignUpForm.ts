@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { RegistrationFormData, RegistrationErrors, RegistrationResponse } from '../types/registration';
+import { RegistrationFormData, RegistrationErrors } from '../types';
 import { signUp } from '../services/authService';
 
 export const useSignUpForm = () => {
@@ -80,75 +80,6 @@ export const useSignUpForm = () => {
     return () => clearTimeout(timeoutId);
   }, [formData.zipCode]);
 
-  const validateForm = (): boolean => {
-    const newErrors: RegistrationErrors = {};
-    const trimmedFullName = formData.fullName.trim();
-
-    // Full name validation
-    if (!trimmedFullName) {
-      newErrors.fullName = 'Full name is required';
-    } else if (trimmedFullName.length < 2) {
-      newErrors.fullName = 'Full name must be at least 2 characters';
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-
-    // Confirm email validation
-    if (!formData.confirmEmail) {
-      newErrors.confirmEmail = 'Please confirm your email';
-    } else if (formData.email !== formData.confirmEmail) {
-      newErrors.confirmEmail = 'Email addresses do not match';
-    }
-
-    // Password validation
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Password must contain at least one uppercase letter, one lowercase letter, and one number';
-    }
-
-    // Confirm password validation
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    // Display name validation
-    if (!formData.displayName) {
-      newErrors.displayName = 'Please select a display name';
-    }
-
-    // Sports interested validation
-    if (formData.preferredSports.length === 0) {
-      newErrors.preferredSports = 'Please select at least one sport';
-    }
-
-    // Skill level validation
-    if (formData.skillLevel === 0) {
-      newErrors.skillLevel = 'Please select your skill level';
-    }
-
-    // ZIP code validation
-    const zipRegex = /^\d{5}(-\d{4})?$/;
-    if (!formData.zipCode) {
-      newErrors.zipCode = 'ZIP code is required';
-    } else if (!zipRegex.test(formData.zipCode)) {
-      newErrors.zipCode = 'Please enter a valid ZIP code';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
@@ -205,31 +136,37 @@ export const useSignUpForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) {
-      return;
-    }
-
     setLoading(true);
     setErrors({});
     setSuccess('');
 
     try {
-      // Use the authService signUp function
+      // Send raw form data to backend - let backend handle all validation
       const data = await signUp(formData, cityName);
 
-      setSuccess(data.message || 'Account created successfully!');
-      setFormData({
-        fullName: '',
-        email: '',
-        confirmEmail: '',
-        password: '',
-        confirmPassword: '',
-        displayName: '',
-        preferredSports: [],
-        skillLevel: 2.5,
-        zipCode: ''
-      });
-      setCityName(''); 
+      if (data.success) {
+        setSuccess(data.message || 'Account created successfully!');
+        // Reset form on success
+        setFormData({
+          fullName: '',
+          email: '',
+          confirmEmail: '',
+          password: '',
+          confirmPassword: '',
+          displayName: '',
+          preferredSports: [],
+          skillLevel: 2.5,
+          zipCode: ''
+        });
+        setCityName('');
+      } else {
+        // Handle backend validation errors
+        if (data.validationErrors) {
+          setErrors(data.validationErrors);
+        } else {
+          handleError(data.error || 'Sign up failed');
+        }
+      }
     } catch (err: any) {
       handleError(err.message || 'Sign up failed');
     } finally {
