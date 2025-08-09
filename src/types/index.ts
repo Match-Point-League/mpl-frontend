@@ -2,7 +2,7 @@
 export * from './userTypes';
 
 // Export all types from registration
-export * from './registration';
+export * from './registrationTypes';
 
 // Export all types from validation
 export * from './validationTypes';
