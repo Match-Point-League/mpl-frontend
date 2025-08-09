@@ -2,18 +2,21 @@ import { useState } from 'react';
 import { RegistrationFormData, RegistrationErrors } from '../types';
 import { signUp } from '../services/authService';
 
+// Default form state
+const defaultFormState: RegistrationFormData = {
+  fullName: '',
+  email: '',
+  confirmEmail: '',
+  password: '',
+  confirmPassword: '',
+  displayName: '',
+  preferredSports: [],
+  skillLevel: 2.5,
+  zipCode: ''
+};
+
 export const useSignUpForm = () => {
-  const [formData, setFormData] = useState<RegistrationFormData>({
-    fullName: '',
-    email: '',
-    confirmEmail: '',
-    password: '',
-    confirmPassword: '',
-    displayName: '',
-    preferredSports: [],
-    skillLevel: 2.5,
-    zipCode: ''
-  });
+  const [formData, setFormData] = useState<RegistrationFormData>(defaultFormState);
   const [errors, setErrors] = useState<RegistrationErrors>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
@@ -108,17 +111,7 @@ export const useSignUpForm = () => {
       if (data.success) {
         setSuccess(data.message || 'Account created successfully!');
         // Reset form on success
-        setFormData({
-          fullName: '',
-          email: '',
-          confirmEmail: '',
-          password: '',
-          confirmPassword: '',
-          displayName: '',
-          preferredSports: [],
-          skillLevel: 2.5,
-          zipCode: ''
-        });
+        setFormData(defaultFormState);
       } else {
         // Handle backend validation errors
         if (data.validationErrors) {
