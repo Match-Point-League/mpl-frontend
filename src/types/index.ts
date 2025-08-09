@@ -8,4 +8,4 @@ export * from './registrationTypes';
 export * from './validationTypes';
 
 // Export all types from api
-export * from './api'; 
+export * from './apiTypes'; 
