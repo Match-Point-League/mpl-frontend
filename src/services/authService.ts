@@ -3,7 +3,7 @@ import { RegistrationFormData, RegistrationResponse } from "../types/registratio
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
 
 // Sign up with backend API
-export async function signUp(formData: RegistrationFormData, cityName?: string): Promise<RegistrationResponse> {
+export async function signUp(formData: RegistrationFormData): Promise<RegistrationResponse> {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/signup`, {
       method: 'POST',
@@ -17,8 +17,7 @@ export async function signUp(formData: RegistrationFormData, cityName?: string):
         displayName: formData.displayName,
         preferredSports: formData.preferredSports,
         skillLevel: formData.skillLevel,
-        zipCode: formData.zipCode,
-        cityName: cityName
+        zipCode: formData.zipCode
       }),
     });
 

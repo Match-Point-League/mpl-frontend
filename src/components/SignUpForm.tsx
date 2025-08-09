@@ -9,7 +9,6 @@ const SignUpForm: React.FC = () => {
     errors,
     loading,
     success,
-    cityName,
     handleInputChange,
     handleSliderChange,
     handleSportsSelection,
@@ -202,9 +201,6 @@ const SignUpForm: React.FC = () => {
             placeholder="Enter your ZIP code"
           />
         </div>
-        {cityName && (
-          <p className="mt-1 text-sm text-gray-600">{cityName}</p>
-        )}
         {errors.zipCode && (
           <p className="mt-1 text-sm text-red-600">{errors.zipCode}</p>
         )}

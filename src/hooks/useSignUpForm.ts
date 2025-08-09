@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { RegistrationFormData, RegistrationErrors } from '../types';
 import { signUp } from '../services/authService';
 
@@ -17,11 +17,9 @@ export const useSignUpForm = () => {
   const [errors, setErrors] = useState<RegistrationErrors>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
-  const [cityName, setCityName] = useState('');
 
-  // Centralized error handling function for setting the city name
+  // Centralized error handling function
   const handleError = (error: string, field?: keyof RegistrationErrors) => {
-    setCityName('');
     if (field) {
       setErrors(prev => ({
         ...prev,
@@ -42,43 +40,6 @@ export const useSignUpForm = () => {
       [field]: undefined
     }));
   };
-
-  // Fetch city name from ZIP code
-  const fetchCityFromZip = async (zipCode: string) => {
-    if (zipCode.length !== 5) {
-      setCityName('');
-      clearError('zipCode');
-      return;
-    }
-
-    let success = false;
-    try {
-      const response = await fetch(`https://api.zippopotam.us/US/${zipCode}`);
-      if (response.ok) {
-        const data = await response.json();
-        const city = data.places[0]['place name'];
-        const state = data.places[0]['state abbreviation'];
-        setCityName(`${city}, ${state}`);
-        clearError('zipCode');
-        success = true;
-      }
-    } catch (error) {
-      // Do nothing, let the error handling below handle it
-    }
-
-    if (!success) {
-      handleError('Invalid ZIP code', 'zipCode');
-    }
-  };
-
-  // Debounced ZIP code lookup
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      fetchCityFromZip(formData.zipCode);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [formData.zipCode]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -142,7 +103,7 @@ export const useSignUpForm = () => {
 
     try {
       // Send raw form data to backend - let backend handle all validation
-      const data = await signUp(formData, cityName);
+      const data = await signUp(formData);
 
       if (data.success) {
         setSuccess(data.message || 'Account created successfully!');
@@ -158,7 +119,6 @@ export const useSignUpForm = () => {
           skillLevel: 2.5,
           zipCode: ''
         });
-        setCityName('');
       } else {
         // Handle backend validation errors
         if (data.validationErrors) {
@@ -179,7 +139,6 @@ export const useSignUpForm = () => {
     errors,
     loading,
     success,
-    cityName,
     handleInputChange,
     handleSliderChange,
     handleSportsSelection,
