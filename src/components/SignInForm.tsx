@@ -1,4 +1,19 @@
 import React, { useState } from 'react';
+import apiClient from '../config/api';
+
+// Define the sign-in response type to match backend
+interface SignInResponseData {
+  success: boolean;
+  message?: string;
+  error?: string;
+  token?: string;
+  user?: {
+    id: string;
+    email: string;
+    name: string;
+    displayName: string;
+  };
+}
 
 const SignInForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -12,40 +27,57 @@ const SignInForm: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/v1/auth/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      console.log('Attempting sign-in with:', { email, password: '***' });
+      const response = await apiClient.post<SignInResponseData>('/auth/signin', { email, password });
+      console.log('Sign-in response received:', response);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Sign in failed');
+      if (response.success && response.data?.token) {
+        // Store the token if the backend returns one
+        localStorage.setItem('authToken', response.data.token);
+        
+        // Redirect to dashboard or home page after successful sign in
+        window.location.href = '/';
+      } else {
+        // Handle unsuccessful response
+        setError(response.error || 'Sign in failed. Please try again.');
       }
-
-      // Store the token if the backend returns one
-      if (data.token) {
-        localStorage.setItem('authToken', data.token);
-      }
-
-      // Redirect to dashboard or home page after successful sign in
-      window.location.href = '/';
     } catch (err: any) {
       console.error('Sign in error:', err);
       
-      // Handle specific error messages
-      if (err.message.includes('Invalid credentials')) {
-        setError('Invalid email or password. Please try again.');
-      } else if (err.message.includes('User not found')) {
-        setError('No account found with this email address.');
-      } else if (err.message.includes('Invalid email')) {
-        setError('Please enter a valid email address.');
-      } else {
-        setError(err.message || 'Failed to sign in. Please check your credentials and try again.');
+      // Handle different types of errors gracefully
+      let userFriendlyError = 'Failed to sign in. Please try again.';
+      
+      if (err.response) {
+        // Server responded with error status
+        const status = err.response.status;
+        console.log('Error response status:', status, 'Data:', err.response.data);
+        
+        if (status === 401) {
+          userFriendlyError = 'Invalid email or password. Please try again.';
+        } else if (status === 404) {
+          userFriendlyError = 'No account found with this email address.';
+        } else if (status === 400) {
+          userFriendlyError = 'Please check your email and password format.';
+        } else if (status === 500) {
+          userFriendlyError = 'Server error. Please try again later.';
+        }
+      } else if (err.request) {
+        // Network error - no response received
+        console.log('Network error - no response received:', err.request);
+        userFriendlyError = 'Network error. Please check your connection and try again.';
+      } else if (err.message) {
+        // Other error with message
+        console.log('Other error:', err.message);
+        if (err.message.includes('Invalid credentials')) {
+          userFriendlyError = 'Invalid email or password. Please try again.';
+        } else if (err.message.includes('User not found')) {
+          userFriendlyError = 'No account found with this email address.';
+        } else if (err.message.includes('Invalid email')) {
+          userFriendlyError = 'Please enter a valid email address.';
+        }
       }
+      
+      setError(userFriendlyError);
     } finally {
       setIsLoading(false);
     }
