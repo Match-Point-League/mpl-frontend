@@ -5,22 +5,24 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/
 // Sign up with backend API
 export async function signUp(formData: RegistrationFormData): Promise<RegistrationResponse> {
   try {
+    const requestBody = {
+      email: formData.email,
+      password: formData.password,
+      fullName: formData.fullName,
+      displayName: formData.displayName,
+      preferredSports: formData.preferredSports,
+      skillLevel: formData.skillLevel,
+      zipCode: formData.zipCode,
+      confirmEmail: formData.confirmEmail,
+      confirmPassword: formData.confirmPassword
+    };
+
     const response = await fetch(`${API_BASE_URL}/auth/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email: formData.email,
-        password: formData.password,
-        fullName: formData.fullName,
-        displayName: formData.displayName,
-        preferredSports: formData.preferredSports,
-        skillLevel: formData.skillLevel,
-        zipCode: formData.zipCode,
-        confirmEmail: formData.confirmEmail,
-        confirmPassword: formData.confirmPassword
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     const data: RegistrationResponse = await response.json();
