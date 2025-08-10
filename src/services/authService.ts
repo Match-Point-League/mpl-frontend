@@ -17,7 +17,9 @@ export async function signUp(formData: RegistrationFormData): Promise<Registrati
         displayName: formData.displayName,
         preferredSports: formData.preferredSports,
         skillLevel: formData.skillLevel,
-        zipCode: formData.zipCode
+        zipCode: formData.zipCode,
+        confirmEmail: formData.confirmEmail,
+        confirmPassword: formData.confirmPassword
       }),
     });
 
