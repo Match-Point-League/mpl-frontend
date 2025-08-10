@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import SignInForm from '../components/SignInForm';
 
 const SignInPage: React.FC = () => {
@@ -17,39 +16,6 @@ const SignInPage: React.FC = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <SignInForm />
-          
-          {/* Forgot Password Link */}
-          <div className="mt-6 text-center">
-            <Link 
-              to="/forgot-password" 
-              className="text-sm text-indigo-600 hover:text-indigo-500 font-medium"
-            >
-              Forgot your password?
-            </Link>
-          </div>
-          
-          {/* Sign Up Link */}
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  New to MPL?
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <Link
-                to="/signup"
-                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Join Today
-              </Link>
-            </div>
-          </div>
         </div>
       </div>
     </div>
