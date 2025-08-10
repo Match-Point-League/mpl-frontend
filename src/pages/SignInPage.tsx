@@ -18,6 +18,16 @@ const SignInPage: React.FC = () => {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <SignInForm />
           
+          {/* Forgot Password Link */}
+          <div className="mt-6 text-center">
+            <Link 
+              to="/forgot-password" 
+              className="text-sm text-indigo-600 hover:text-indigo-500 font-medium"
+            >
+              Forgot your password?
+            </Link>
+          </div>
+          
           {/* Sign Up Link */}
           <div className="mt-6">
             <div className="relative">
