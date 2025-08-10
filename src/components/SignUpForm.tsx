@@ -1,22 +1,189 @@
-import React from 'react';
-import { useSignUpForm } from '../hooks/useSignUpForm';
+import React, { useState, useEffect } from 'react';
+import { FormData, FormErrors } from '../types/registration';
 import { generateDisplayNameOptions, getSkillLevelDescription } from '../utils/registrationFormUtils';
 import '../styles/signUp.css';
 
 const SignUpForm: React.FC = () => {
-  const {
-    formData,
-    errors,
-    loading,
-    success,
-    cityName,
-    handleInputChange,
-    handleSliderChange,
-    handleSportsSelection,
-    handleSubmit
-  } = useSignUpForm();
+  const [formData, setFormData] = useState<FormData>({
+    fullName: '',
+    email: '',
+    confirmEmail: '',
+    password: '',
+    confirmPassword: '',
+    displayName: '',
+    sportsInterested: [],
+    skillLevel: 2.5,
+    zipCode: ''
+  });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [cityName, setCityName] = useState('');
+
+  // Fetch city name from ZIP code
+  const fetchCityFromZip = async (zipCode: string) => {
+    if (zipCode.length === 5) {
+      try {
+        const response = await fetch(`https://api.zippopotam.us/US/${zipCode}`);
+        if (response.ok) {
+          const data = await response.json();
+          const city = data.places[0]['place name'];
+          const state = data.places[0]['state abbreviation'];
+          setCityName(`${city}, ${state}`);
+        } else {
+          setCityName('');
+        }
+      } catch (error) {
+        setCityName('');
+      }
+    } else {
+      setCityName('');
+    }
+  };
+
+  // Debounced ZIP code lookup
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (formData.zipCode.length === 5) {
+        fetchCityFromZip(formData.zipCode);
+      } else {
+        setCityName('');
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [formData.zipCode]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, skillLevel: parseFloat(e.target.value) }));
+  };
+
+  const handleSportsSelection = (sport: string) => {
+    setFormData(prev => ({
+      ...prev,
+      sportsInterested: prev.sportsInterested.includes(sport)
+        ? prev.sportsInterested.filter(s => s !== sport)
+        : [...prev.sportsInterested, sport]
+    }));
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors: FormErrors = {};
+
+    if (!formData.fullName) {
+      newErrors.fullName = 'Full Name is required';
+      isValid = false;
+    }
+    if (!formData.displayName) {
+      newErrors.displayName = 'Display Name is required';
+      isValid = false;
+    }
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S/.test(formData.email)) {
+      newErrors.email = 'Email address is invalid';
+      isValid = false;
+    }
+    if (!formData.confirmEmail) {
+      newErrors.confirmEmail = 'Please confirm your email';
+      isValid = false;
+    } else if (formData.email !== formData.confirmEmail) {
+      newErrors.confirmEmail = 'Emails do not match';
+      isValid = false;
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+      isValid = false;
+    }
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+      isValid = false;
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+      isValid = false;
+    }
+    if (formData.sportsInterested.length === 0) {
+      newErrors.sportsInterested = 'At least one sport must be selected';
+      isValid = false;
+    }
+    if (!formData.skillLevel) {
+      newErrors.skillLevel = 'Skill level is required';
+      isValid = false;
+    }
+    if (!formData.zipCode) {
+      newErrors.zipCode = 'ZIP Code is required';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
 
   const displayNameOptions = generateDisplayNameOptions(formData.fullName);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+    setErrors({});
+    setSuccess('');
+
+    try {
+      // Call backend signup API
+      const response = await fetch('/api/v1/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+          displayName: formData.displayName,
+          preferredSports: formData.sportsInterested,
+          skillLevel: formData.skillLevel,
+          zipCode: formData.zipCode
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Sign up failed');
+      }
+
+      setSuccess('Account created successfully!');
+      setFormData({
+        fullName: '',
+        email: '',
+        confirmEmail: '',
+        password: '',
+        confirmPassword: '',
+        displayName: '',
+        sportsInterested: [],
+        skillLevel: 2.5,
+        zipCode: ''
+      });
+      setCityName('');
+    } catch (err: any) {
+      setErrors({
+        general: err.message || 'Sign up failed'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>

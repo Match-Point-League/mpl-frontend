@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebase';
 
 const SignInForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -14,31 +12,39 @@ const SignInForm: React.FC = () => {
     setError('');
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const response = await fetch('/api/v1/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Sign in failed');
+      }
+
+      // Store the token if the backend returns one
+      if (data.token) {
+        localStorage.setItem('authToken', data.token);
+      }
+
       // Redirect to dashboard or home page after successful sign in
       window.location.href = '/';
     } catch (err: any) {
       console.error('Sign in error:', err);
       
-      // Handle specific Firebase errors
-      switch (err.code) {
-        case 'auth/user-not-found':
-          setError('No account found with this email address.');
-          break;
-        case 'auth/wrong-password':
-          setError('Incorrect password. Please try again.');
-          break;
-        case 'auth/invalid-email':
-          setError('Please enter a valid email address.');
-          break;
-        case 'auth/user-disabled':
-          setError('This account has been disabled.');
-          break;
-        case 'auth/too-many-requests':
-          setError('Too many failed attempts. Please try again later.');
-          break;
-        default:
-          setError('Failed to sign in. Please check your credentials and try again.');
+      // Handle specific error messages
+      if (err.message.includes('Invalid credentials')) {
+        setError('Invalid email or password. Please try again.');
+      } else if (err.message.includes('User not found')) {
+        setError('No account found with this email address.');
+      } else if (err.message.includes('Invalid email')) {
+        setError('Please enter a valid email address.');
+      } else {
+        setError(err.message || 'Failed to sign in. Please check your credentials and try again.');
       }
     } finally {
       setIsLoading(false);
