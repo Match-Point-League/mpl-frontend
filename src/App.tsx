@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import SignUpPage from './pages/SignUpPage';
 import SignInPage from './pages/SignInPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 // Initialize React Query client
 const queryClient = new QueryClient({
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signin" element={<SignInPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/" element={
             <div className="min-h-screen bg-gray-50">
               <header className="bg-white shadow">
@@ -50,6 +52,12 @@ function App() {
                           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                         >
                           Sign Up
+                        </Link>
+                        <Link
+                          to="/forgot-password"
+                          className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+                        >
+                          Forgot Password
                         </Link>
                       </div>
                     </div>
