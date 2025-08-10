@@ -1,5 +1,5 @@
 import apiClient from '../config/api';
-import { HealthCheckResponse } from '../types/api';
+import { HealthCheckResponse } from '../types/apiTypes';
 
 export class HealthService {
   public static async getHealthCheck(): Promise<HealthCheckResponse> {
