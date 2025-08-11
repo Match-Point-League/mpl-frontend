@@ -16,13 +16,22 @@ export interface RegistrationFormData {
 }
 
 /**
- * Registration API response
+ * Clean response data for sign-up endpoint - contains only essential fields
+ */
+export type SignUpResponseData = {
+  userId?: string;
+  validationErrors?: ValidationErrors;
+};
+
+/**
+ * Registration API response - matches backend structure
  */
 export interface RegistrationResponse {
   success: boolean;
   message?: string;
   error?: string;
-  validationErrors?: ValidationErrors;
+  data: SignUpResponseData;
+  timestamp: string;
 }
 
 // Re-export for backward compatibility
