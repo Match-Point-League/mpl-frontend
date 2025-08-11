@@ -1,5 +1,5 @@
 import React from 'react';
-import { User } from './dashboardData';
+import { User } from '@/pages/dashboard/dashboardData';
 
 interface ProfileTabProps {
   currentUser: User;

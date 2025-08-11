@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Match, getUserById, getCourtById } from '../../pages/dashboard/dashboardData';
+import { User, Match, getUserById, getCourtById } from '@/pages/dashboard/dashboardData';
 import { formatDate } from '@/utils/formatUtils';
 
 interface MatchesTabProps {
