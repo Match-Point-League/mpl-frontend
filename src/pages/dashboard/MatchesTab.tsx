@@ -1,6 +1,6 @@
 import React from 'react';
 import { User, Match, getUserById, getCourtById } from './dashboardData';
-import { formatDate, formatMatchScore } from '@/utils/formatUtils';
+import { formatDate } from '@/utils/formatUtils';
 
 interface MatchesTabProps {
   currentUser: User;
@@ -103,7 +103,43 @@ const MatchesTab: React.FC<MatchesTabProps> = ({
                       <p><strong>Date:</strong> {formatDate(match.match_time)}</p>
                       <p><strong>Sport:</strong> {match.sport}</p>
                       <p><strong>Type:</strong> {match.match_type}</p>
-                      <p><strong>Score:</strong> {formatMatchScore(match)}</p>
+                      <div className="score-grid">
+                        <strong>Score:</strong>
+                        <table className="score-table">
+                          <thead>
+                            <tr>
+                              <th></th>
+                              {match.score?.sets.map((_, idx) => (
+                                <th key={idx}>Set {idx + 1}</th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>{getUserById(match.player1_id)?.display_name || 'Player 1'}</td>
+                              {match.score?.sets.map((set, idx) => (
+                                <td key={idx}>
+                                  {set.player1}
+                                  {set.tiebreak ? (
+                                    <span className="tiebreak"> (TB: {set.tiebreak.player1}-{set.tiebreak.player2})</span>
+                                  ) : null}
+                                </td>
+                              ))}
+                            </tr>
+                            <tr>
+                              <td>{getUserById(match.player2_id)?.display_name || 'Player 2'}</td>
+                              {match.score?.sets.map((set, idx) => (
+                                <td key={idx}>
+                                  {set.player2}
+                                  {set.tiebreak ? (
+                                    <span className="tiebreak"> (TB: {set.tiebreak.player2}-{set.tiebreak.player1})</span>
+                                  ) : null}
+                                </td>
+                              ))}
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                       <p><strong>Court:</strong> {court?.name}</p>
                       <p><strong>Location:</strong> {court?.address_line}, {court?.city}</p>
                     </div>
