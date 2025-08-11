@@ -6,6 +6,13 @@ export interface ApiResponse<T = any> {
   timestamp: string;
 }
 
+export interface AuthUser {
+  id: string;
+  email: string;
+  name: string;
+  displayName: string;
+}
+
 export interface HealthCheckResponse {
   status: string;
   timestamp: string;
