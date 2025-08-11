@@ -9,20 +9,23 @@ export const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'profile' | 'matches'>('profile');
   const currentUser = sampleUser;
   const stats = getUserStats();
+  const matches = sampleMatches;
 
   const handleNotImplemented = (feature: string) => {
     console.log(`${feature} feature is being implemented`);
     alert(`${feature} feature is being implemented`);
   };
 
-  const pastMatches = sampleMatches.filter(match => 
-    [MatchStatus.SCORE_REPORTED, MatchStatus.SCORE_VERIFIED].includes(match.status as MatchStatus) && 
-    (match.player1_id === currentUser.id || match.player2_id === currentUser.id)
+  const pastMatches = matches.filter(match => 
+    ![MatchStatus.PENDING, MatchStatus.CANCELLED].includes(match.status as MatchStatus) && 
+    (match.player1_id === currentUser.id || match.player2_id === currentUser.id) &&
+    new Date(match.match_time) < new Date()
   );
 
-  const upcomingMatches = sampleMatches.filter(match => 
+  const upcomingMatches = matches.filter(match => 
     [MatchStatus.PENDING, MatchStatus.CONFIRMED].includes(match.status as MatchStatus) && 
-    (match.player1_id === currentUser.id || match.player2_id === currentUser.id)
+    (match.player1_id === currentUser.id || match.player2_id === currentUser.id) &&
+    new Date(match.match_time) >= new Date()
   );
 
   return (
