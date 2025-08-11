@@ -1,132 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { FormData } from '../types/registrationTypes';
+import React from 'react';
 import { generateDisplayNameOptions, getSkillLevelDescription } from '../utils/registrationFormUtils';
+import { useSignUpForm } from '../hooks/useSignUpForm';
 import '../styles/signUp.css';
 
 const SignUpForm: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    fullName: '',
-    email: '',
-    confirmEmail: '',
-    password: '',
-    confirmPassword: '',
-    displayName: '',
-    sportsInterested: [],
-    skillLevel: 2.5,
-    zipCode: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
-  const [cityName, setCityName] = useState('');
-
-  // Fetch city name from ZIP code
-  const fetchCityFromZip = async (zipCode: string) => {
-    if (zipCode.length === 5) {
-      try {
-        const response = await fetch(`https://api.zippopotam.us/US/${zipCode}`);
-        if (response.ok) {
-          const data = await response.json();
-          const city = data.places[0]['place name'];
-          const state = data.places[0]['state abbreviation'];
-          setCityName(`${city}, ${state}`);
-        } else {
-          setCityName('');
-        }
-      } catch (error) {
-        setCityName('');
-      }
-    } else {
-      setCityName('');
-    }
-  };
-
-  // Debounced ZIP code lookup
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (formData.zipCode.length === 5) {
-        fetchCityFromZip(formData.zipCode);
-      } else {
-        setCityName('');
-      }
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [formData.zipCode]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, skillLevel: parseFloat(e.target.value) }));
-  };
-
-  const handleSportsSelection = (sport: string) => {
-    setFormData(prev => ({
-      ...prev,
-      sportsInterested: prev.sportsInterested.includes(sport)
-        ? prev.sportsInterested.filter(s => s !== sport)
-        : [...prev.sportsInterested, sport]
-    }));
-  };
+  const {
+    formData,
+    errors,
+    loading,
+    success,
+    handleInputChange,
+    handleSliderChange,
+    handleSportsSelection,
+    handleSubmit
+  } = useSignUpForm();
 
   const displayNameOptions = generateDisplayNameOptions(formData.fullName);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    setLoading(true);
-    setSuccess('');
-
-    try {
-      // Call backend signup API
-      const response = await fetch('/api/v1/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fullName: formData.fullName,
-          email: formData.email,
-          password: formData.password,
-          displayName: formData.displayName,
-          preferredSports: formData.sportsInterested,
-          skillLevel: formData.skillLevel,
-          zipCode: formData.zipCode
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Sign up failed');
-      }
-
-      setSuccess('Account created successfully!');
-      setFormData({
-        fullName: '',
-        email: '',
-        confirmEmail: '',
-        password: '',
-        confirmPassword: '',
-        displayName: '',
-        sportsInterested: [],
-        skillLevel: 2.5,
-        zipCode: ''
-      });
-      setCityName('');
-    } catch (err: any) {
-      // Handle backend validation errors
-      if (err.message && err.message.includes('Validation failed')) {
-        // Backend validation failed - could display specific errors here if needed
-        console.error('Validation errors:', err);
-      }
-      // Could add a general error state here if needed
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
@@ -144,10 +33,15 @@ const SignUpForm: React.FC = () => {
             required
             value={formData.fullName}
             onChange={handleInputChange}
-            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className={`appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+              errors.fullName ? 'border-red-300' : 'border-gray-300'
+            }`}
             placeholder="Enter your full name"
           />
         </div>
+        {errors.fullName && (
+          <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
+        )}
       </div>
 
       {/* Display Name */}
@@ -163,7 +57,9 @@ const SignUpForm: React.FC = () => {
               required
               value={formData.displayName}
               onChange={handleInputChange}
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className={`appearance-none block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+                errors.displayName ? 'border-red-300' : 'border-gray-300'
+              }`}
             >
               <option value="">Select a display name</option>
               {displayNameOptions.map((option: string, index: number) => (
@@ -173,6 +69,9 @@ const SignUpForm: React.FC = () => {
               ))}
             </select>
           </div>
+          {errors.displayName && (
+            <p className="mt-1 text-sm text-red-600">{errors.displayName}</p>
+          )}
         </div>
       )}
 
@@ -190,10 +89,15 @@ const SignUpForm: React.FC = () => {
             required
             value={formData.email}
             onChange={handleInputChange}
-            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className={`appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+              errors.email ? 'border-red-300' : 'border-gray-300'
+            }`}
             placeholder="Enter your email"
           />
         </div>
+        {errors.email && (
+          <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+        )}
       </div>
 
       {/* Confirm Email */}
@@ -210,10 +114,15 @@ const SignUpForm: React.FC = () => {
             required
             value={formData.confirmEmail}
             onChange={handleInputChange}
-            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className={`appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+              errors.confirmEmail ? 'border-red-300' : 'border-gray-300'
+            }`}
             placeholder="Confirm your email"
           />
         </div>
+        {errors.confirmEmail && (
+          <p className="mt-1 text-sm text-red-600">{errors.confirmEmail}</p>
+        )}
       </div>
 
       {/* Sports Interested - Tab Style */}
@@ -228,13 +137,16 @@ const SignUpForm: React.FC = () => {
               type="button"
               onClick={() => handleSportsSelection(sport)}
               className={`sports-tab ${
-                formData.sportsInterested.includes(sport) ? 'active' : ''
+                formData.preferredSports.includes(sport) ? 'active' : ''
               }`}
             >
               {sport.charAt(0).toUpperCase() + sport.slice(1)}
             </button>
           ))}
         </div>
+        {errors.preferredSports && (
+          <p className="mt-1 text-sm text-red-600">{errors.preferredSports}</p>
+        )}
       </div>
 
       {/* Skill Level - Slider */}
@@ -264,6 +176,9 @@ const SignUpForm: React.FC = () => {
             <span>5.5</span>
           </div>
         </div>
+        {errors.skillLevel && (
+          <p className="mt-1 text-sm text-red-600">{errors.skillLevel}</p>
+        )}
       </div>
 
       {/* ZIP Code */}
@@ -280,12 +195,14 @@ const SignUpForm: React.FC = () => {
             required
             value={formData.zipCode}
             onChange={handleInputChange}
-            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className={`appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+              errors.zipCode ? 'border-red-300' : 'border-gray-300'
+            }`}
             placeholder="Enter your ZIP code"
           />
         </div>
-        {cityName && (
-          <p className="mt-1 text-sm text-gray-600">{cityName}</p>
+        {errors.zipCode && (
+          <p className="mt-1 text-sm text-red-600">{errors.zipCode}</p>
         )}
       </div>
 
@@ -303,10 +220,15 @@ const SignUpForm: React.FC = () => {
             required
             value={formData.password}
             onChange={handleInputChange}
-            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className={`appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+              errors.password ? 'border-red-300' : 'border-gray-300'
+            }`}
             placeholder="Enter your password"
           />
         </div>
+        {errors.password && (
+          <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+        )}
       </div>
 
       {/* Confirm Password */}
@@ -323,18 +245,16 @@ const SignUpForm: React.FC = () => {
             required
             value={formData.confirmPassword}
             onChange={handleInputChange}
-            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className={`appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
+              errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
+            }`}
             placeholder="Confirm your password"
           />
         </div>
+        {errors.confirmPassword && (
+          <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
+        )}
       </div>
-
-      {/* Success Message */}
-      {success && (
-        <div className="bg-green-50 border border-green-200 rounded-md p-4">
-          <p className="text-sm text-green-600">{success}</p>
-        </div>
-      )}
 
       <div>
         <button
