@@ -8,6 +8,40 @@ const SignInForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const handleSignInSuccess = (user: AuthUser) => {
+    // Store both user data and token
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('authToken', user.token);
+    
+    // Redirect to dashboard or home page after successful sign in
+    window.location.href = '/';
+  };
+
+  const mapErrorToUserMessage = (error: any): string => {
+    if (!error.message) {
+      return 'Failed to sign in. Please try again.';
+    }
+
+    const invalidPassword = 'Invalid email or password. Please try again.';
+    const noAccountFound = 'No account found with this email address';
+    const invalidEmail = 'Please enter a valid email address';
+    const tooManyFailedAttempts = 'Too many failed attempts. Please try again later.';
+
+    // Map specific error messages to user-friendly text
+    switch (error.message) {
+      case invalidPassword:
+        return invalidPassword;
+      case noAccountFound:
+        return noAccountFound;
+      case invalidEmail:
+        return invalidEmail;
+      case tooManyFailedAttempts:
+        return tooManyFailedAttempts;
+      default:
+        return error.message;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -15,27 +49,14 @@ const SignInForm: React.FC = () => {
 
     try {
       console.log('Attempting sign-in with:', { email, password: '***' });
-      // Use our new sign-in service
+      
       const user: AuthUser = await signIn(email, password);
       console.log('Sign-in successful, user data:', user);
-
-      // Store both user data and token
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('authToken', user.token);
       
-      // Redirect to dashboard or home page after successful sign in
-      window.location.href = '/';
+      handleSignInSuccess(user);
     } catch (err: any) {
       console.error('Sign in error:', err);
-      
-      // Handle errors from our service
-      let userFriendlyError = 'Failed to sign in. Please try again.';
-      
-      if (err.message) {
-        // Use the specific error message from our service
-        userFriendlyError = err.message;
-      }
-      
+      const userFriendlyError = mapErrorToUserMessage(err);
       setError(userFriendlyError);
     } finally {
       setIsLoading(false);
