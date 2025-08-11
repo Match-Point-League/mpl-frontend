@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { sampleUser, sampleMatches, getUserStats } from './dashboardData';
-import ProfileTab from './ProfileTab';
-import MatchesTab from './MatchesTab';
-import '../../styles/Dashboard.css';
+import ProfileTab from '@/components/dashboard/ProfileTab';
+import MatchesTab from '@/components/dashboard/MatchesTab';
+import '@/styles/dashboard.css';
 import { MatchStatus } from '@/types';
 
 export const Dashboard: React.FC = () => {
