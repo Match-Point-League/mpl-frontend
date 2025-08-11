@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
-import { HealthCheckResponse } from './types/api';
-import { Dashboard } from './pages';
+import { HealthCheckResponse } from './types/apiTypes';
+import { Dashboard, SignUpPage } from './pages';
 
 // Initialize React Query client
 const queryClient = new QueryClient({
@@ -36,7 +36,6 @@ function App() {
     }
   }, []);
 
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -58,6 +57,9 @@ function App() {
                   <Link to="/dashboard" className="text-blue-600 hover:text-blue-800">
                     Dashboard
                   </Link>
+                  <Link to="/signup" className="text-blue-600 hover:text-blue-800">
+                    Sign Up
+                  </Link>
                 </nav>
               </div>
             </div>
@@ -76,6 +78,7 @@ function App() {
                 </div>
               } />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/signup" element={<SignUpPage />} />
             </Routes>
           </main>
         </div>
