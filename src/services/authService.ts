@@ -1,6 +1,7 @@
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/firebase";
-import { RegistrationFormData, RegistrationResponse } from "../types";
+import { RegistrationFormData, RegistrationResponse, AuthUser, ApiResponse } from "../types";
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
 
 
@@ -77,13 +78,30 @@ export async function signUp(formData: RegistrationFormData): Promise<Registrati
   }
 }
 
-// Sign in with email and password (placeholder for future implementation)
-export async function signIn(email: string, password: string): Promise<any> {
+// Sign in with email and password
+export async function signIn(email: string, password: string): Promise<AuthUser> {
   try {
-    // TODO: Implement backend sign-in endpoint
-    throw new Error('Sign in not implemented yet');
+    const response = await fetch(`${API_BASE_URL}/auth/signin`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data: ApiResponse<AuthUser> = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Sign in failed');
+    }
+
+    if (!data.success || !data.data) {
+      throw new Error(data.error || 'Sign in failed');
+    }
+
+    return data.data; // This is the AuthUser object
   } catch (error: any) {
-    throw new Error('Sign in failed. Please try again.');
+    throw new Error(error.message || 'Sign in failed. Please try again.');
   }
 }
 
