@@ -470,6 +470,37 @@
   margin: 1rem 0;
 }
 
+/* Score Input Section Styling */
+.score-input-section {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.score-input-section p {
+  margin: 0 0 0.75rem 0;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.input-score-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: #3b82f6;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.input-score-btn:hover {
+  background-color: #2563eb;
+}
+
 @media (max-width: 768px) {
   .dashboard {
     padding: 1rem;

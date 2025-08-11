@@ -2,6 +2,7 @@ import React from 'react';
 import { User, Match, getUserById, getCourtById } from '@/pages/dashboard/dashboardData';
 import { formatDate } from '@/utils/formatUtils';
 import ScoreGrid from './ScoreGrid';
+import { MatchStatus } from '@/types';
 
 interface MatchesTabProps {
   currentUser: User;
@@ -105,7 +106,19 @@ const MatchesTab: React.FC<MatchesTabProps> = ({
                       <p><strong>Date:</strong> {formatDate(match.match_time)}</p>
                       <p><strong>Sport:</strong> {match.sport}</p>
                       <p><strong>Type:</strong> {match.match_type}</p>
-                      <ScoreGrid match={match} />
+                      {match.status === MatchStatus.SCORE_REPORTED || match.status === MatchStatus.SCORE_VERIFIED ? (
+                        <ScoreGrid match={match} />
+                      ) : (
+                        <div className="score-input-section">
+                          <p><strong>Score:</strong> No score reported</p>
+                          <button 
+                            className="input-score-btn"
+                            onClick={() => onNotImplemented('Input Score')}
+                          >
+                            Input Score
+                          </button>
+                        </div>
+                      )}
                       <p><strong>Court:</strong> {court?.name}</p>
                       <p><strong>Location:</strong> {court?.address_line}, {court?.city}</p>
                     </div>

@@ -183,6 +183,20 @@ export const sampleMatches: Match[] = [
     created_at: '2024-07-18T10:00:00Z',
     updated_at: '2024-07-20T12:00:00Z'
   },
+  {
+    id: 'match-5',
+    player1_id: 'user-1',
+    player2_id: 'user-2',
+    match_type: MatchType.FRIENDLY,
+    sport: Sport.PICKLEBALL,
+    match_time: '2024-07-25T16:00:00Z',
+    court_id: 'court-2',
+    status: MatchStatus.CONFIRMED,
+    created_by: 'user-1',
+    score_verified: false,
+    created_at: '2024-07-20T10:00:00Z',
+    updated_at: '2024-07-20T10:00:00Z'
+  },
   // Upcoming matches
   {
     id: 'match-3',
