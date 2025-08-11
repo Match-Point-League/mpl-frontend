@@ -383,6 +383,16 @@
   font-size: 0.95rem;
 }
 
+.score-grid .no-score {
+  color: #6b7280;
+  font-style: italic;
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border-radius: 4px;
+  border: 1px dashed #d1d5db;
+}
+
 .score-table {
   width: 100%;
   border-collapse: collapse;
