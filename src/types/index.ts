@@ -8,4 +8,7 @@ export * from './registrationTypes';
 export * from './validationTypes';
 
 // Export all types from api
-export * from './apiTypes'; 
+export * from './apiTypes';
+
+// Export all types from matchTypes
+export * from './matchTypes';

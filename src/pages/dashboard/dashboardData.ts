@@ -1,10 +1,12 @@
+import { MatchStatus, MatchType, PreferredSport, Sport } from "@/types";
+
 export interface User {
   id: string;
   email: string;
   name: string;
   display_name: string;
   skill_level: number;
-  preferred_sport: 'tennis' | 'pickleball' | 'both';
+  preferred_sport: PreferredSport;
   is_competitive: boolean;
   city: string;
   zip_code: string;
@@ -17,11 +19,11 @@ export interface Match {
   id: string;
   player1_id: string;
   player2_id: string;
-  match_type: 'friendly' | 'league';
-  sport: 'tennis' | 'pickleball';
+  match_type: MatchType;
+  sport: Sport;
   match_time: string;
   court_id: string;
-  status: 'pending' | 'confirmed' | 'score reported' | 'score verified' | 'completed' | 'cancelled';
+  status: MatchStatus;
   score?: {
     sets: Array<{
       player1: number;
@@ -46,7 +48,7 @@ export interface Court {
   zip_code: string;
   is_indoor: boolean;
   lights?: boolean;
-  sport: 'tennis' | 'pickleball' | 'both';
+  sport: Sport[];
   verified: boolean;
   created_by: string;
   created_at: string;
@@ -60,7 +62,7 @@ export const sampleUser: User = {
   name: 'Alex Johnson',
   display_name: 'Alex J.',
   skill_level: 3.5,
-  preferred_sport: 'tennis',
+  preferred_sport: PreferredSport.TENNIS,
   is_competitive: true,
   city: 'San Francisco',
   zip_code: '94102',
@@ -79,7 +81,7 @@ export const sampleCourts: Court[] = [
     zip_code: '94117',
     is_indoor: false,
     lights: true,
-    sport: 'tennis',
+    sport: [Sport.TENNIS],
     verified: true,
     created_by: 'admin-1',
     created_at: '2024-01-01T00:00:00Z',
@@ -93,7 +95,7 @@ export const sampleCourts: Court[] = [
     state: 'CA',
     zip_code: '94158',
     is_indoor: true,
-    sport: 'both',
+    sport: [Sport.TENNIS, Sport.PICKLEBALL],
     verified: true,
     created_by: 'admin-1',
     created_at: '2024-01-01T00:00:00Z',
@@ -109,7 +111,7 @@ export const sampleUsers: User[] = [
     name: 'Sarah Wilson',
     display_name: 'Sarah W.',
     skill_level: 4.0,
-    preferred_sport: 'tennis',
+    preferred_sport: PreferredSport.TENNIS,
     is_competitive: false,
     city: 'San Francisco',
     zip_code: '94103',
@@ -123,7 +125,7 @@ export const sampleUsers: User[] = [
     name: 'Mike Chen',
     display_name: 'Mike C.',
     skill_level: 3.0,
-    preferred_sport: 'pickleball',
+    preferred_sport: PreferredSport.PICKLEBALL,
     is_competitive: true,
     city: 'San Francisco',
     zip_code: '94110',
@@ -139,11 +141,11 @@ export const sampleMatches: Match[] = [
     id: 'match-1',
     player1_id: 'user-1',
     player2_id: 'user-2',
-    match_type: 'friendly',
-    sport: 'tennis',
+    match_type: MatchType.FRIENDLY,
+    sport: Sport.TENNIS,
     match_time: '2024-07-15T14:00:00Z',
     court_id: 'court-1',
-    status: 'completed',
+    status: MatchStatus.SCORE_REPORTED,
     score: {
       sets: [
         { player1: 6, player2: 4 },
@@ -162,11 +164,11 @@ export const sampleMatches: Match[] = [
     id: 'match-2',
     player1_id: 'user-1',
     player2_id: 'user-3',
-    match_type: 'league',
-    sport: 'tennis',
+    match_type: MatchType.LEAGUE,
+    sport: Sport.TENNIS,
     match_time: '2024-07-20T10:00:00Z',
     court_id: 'court-2',
-    status: 'completed',
+    status: MatchStatus.SCORE_REPORTED,
     score: {
       sets: [
         { player1: 4, player2: 6 },
@@ -186,11 +188,11 @@ export const sampleMatches: Match[] = [
     id: 'match-3',
     player1_id: 'user-1',
     player2_id: 'user-2',
-    match_type: 'friendly',
-    sport: 'tennis',
+    match_type: MatchType.FRIENDLY,
+    sport: Sport.TENNIS,
     match_time: '2025-08-10T15:00:00Z',
     court_id: 'court-1',
-    status: 'confirmed',
+    status: MatchStatus.CONFIRMED,
     created_by: 'user-1',
     score_verified: false,
     created_at: '2025-08-05T10:00:00Z',
@@ -200,11 +202,11 @@ export const sampleMatches: Match[] = [
     id: 'match-4',
     player1_id: 'user-1',
     player2_id: 'user-3',
-    match_type: 'league',
-    sport: 'tennis',
+    match_type: MatchType.LEAGUE,
+    sport: Sport.TENNIS,
     match_time: '2025-08-15T18:00:00Z',
     court_id: 'court-2',
-    status: 'pending',
+    status: MatchStatus.PENDING,
     created_by: 'user-3',
     score_verified: false,
     created_at: '2025-08-06T09:00:00Z',
@@ -217,8 +219,8 @@ export const getUserById = (id: string) => sampleUsers.find(user => user.id === 
 export const getCourtById = (id: string) => sampleCourts.find(court => court.id === id);
 
 export const getUserStats = () => ({
-  matchesPlayed: sampleMatches.filter(m => m.status === 'completed' && (m.player1_id === sampleUser.id || m.player2_id === sampleUser.id)).length,
-  wins: sampleMatches.filter(m => m.status === 'completed' && m.winner_id === sampleUser.id).length,
+  matchesPlayed: sampleMatches.filter(m => [MatchStatus.SCORE_REPORTED, MatchStatus.SCORE_VERIFIED].includes(m.status as MatchStatus) && (m.player1_id === sampleUser.id || m.player2_id === sampleUser.id)).length,
+  wins: sampleMatches.filter(m => [MatchStatus.SCORE_REPORTED, MatchStatus.SCORE_VERIFIED].includes(m.status as MatchStatus) && m.winner_id === sampleUser.id).length,
   winRate: 0.5, // 50%
   currentStreak: 2
 });

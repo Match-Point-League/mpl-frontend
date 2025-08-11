@@ -3,6 +3,7 @@ import { sampleUser, sampleMatches, getUserStats } from './dashboardData';
 import ProfileTab from './ProfileTab';
 import MatchesTab from './MatchesTab';
 import '../../styles/Dashboard.css';
+import { MatchStatus } from '@/types';
 
 export const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'profile' | 'matches'>('profile');
@@ -15,12 +16,12 @@ export const Dashboard: React.FC = () => {
   };
 
   const pastMatches = sampleMatches.filter(match => 
-    match.status === 'completed' && 
+    [MatchStatus.SCORE_REPORTED, MatchStatus.SCORE_VERIFIED].includes(match.status as MatchStatus) && 
     (match.player1_id === currentUser.id || match.player2_id === currentUser.id)
   );
 
   const upcomingMatches = sampleMatches.filter(match => 
-    ['pending', 'confirmed'].includes(match.status) && 
+    [MatchStatus.PENDING, MatchStatus.CONFIRMED].includes(match.status as MatchStatus) && 
     (match.player1_id === currentUser.id || match.player2_id === currentUser.id)
   );
 
