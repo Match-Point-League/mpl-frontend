@@ -106,18 +106,19 @@ export const useSignUpForm = () => {
 
     try {
       // Send raw form data to backend - let backend handle all validation
-      const data = await signUp(formData);
+      const response = await signUp(formData);
 
-      if (data.success) {
-        setSuccess(data.message || 'Account created successfully!');
+      if (response.success) {
+        setSuccess(response.message || 'Account created successfully!');
         // Reset form on success
         setFormData(defaultFormState);
+        // You can now access userId if needed: data.data.userId
       } else {
         // Handle backend validation errors
-        if (data.validationErrors) {
-          setErrors(data.validationErrors);
+        if (response.data?.validationErrors) {
+          setErrors(response.data.validationErrors);
         } else {
-          handleError(data.error || 'Sign up failed');
+          handleError(response.error || 'Sign up failed');
         }
       }
     } catch (err: any) {
