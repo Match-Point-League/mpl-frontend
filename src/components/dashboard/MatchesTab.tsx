@@ -42,7 +42,6 @@ const MatchesTab: React.FC<MatchesTabProps> = ({
                       <p><strong>Date:</strong> {formatDate(match.match_time)}</p>
                       <p><strong>Sport:</strong> {match.sport}</p>
                       <p><strong>Type:</strong> {match.match_type}</p>
-                      <ScoreGrid match={match} />
                       <p><strong>Court:</strong> {court?.name}</p>
                       <p><strong>Location:</strong> {court?.address_line}, {court?.city}</p>
                     </div>
