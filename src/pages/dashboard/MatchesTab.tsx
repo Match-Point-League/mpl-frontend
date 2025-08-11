@@ -1,5 +1,6 @@
 import React from 'react';
 import { User, Match, getUserById, getCourtById } from './dashboardData';
+import { formatDate, formatMatchScore } from '@/utils/formatUtils';
 
 interface MatchesTabProps {
   currentUser: User;
@@ -14,23 +15,6 @@ const MatchesTab: React.FC<MatchesTabProps> = ({
   upcomingMatches, 
   onNotImplemented 
 }) => {
-  const formatMatchScore = (match: Match) => {
-    if (!match.score) return 'No score';
-    return match.score.sets.map((set, index) => 
-      `${set.player1}-${set.player2}${set.tiebreak ? ` (${set.tiebreak.player1}-${set.tiebreak.player2})` : ''}`
-    ).join(', ');
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
   return (
     <div className="matches-tab">
       <section className="matches-section">
