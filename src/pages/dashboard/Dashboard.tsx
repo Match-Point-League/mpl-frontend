@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { sampleUser, sampleMatches, getUserStats } from './dashboardData';
 import ProfileTab from './ProfileTab';
 import MatchesTab from './MatchesTab';
-import './Dashboard.css';
+import '../../styles/Dashboard.css';
 
 export const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'profile' | 'matches'>('profile');
