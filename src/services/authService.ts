@@ -1,5 +1,8 @@
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/firebase";
+import { RegistrationFormData, RegistrationResponse } from "../types";
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
+
 
 export interface ForgotPasswordResponse {
   success: boolean;
@@ -38,3 +41,68 @@ export const forgotPassword = async (email: string): Promise<ForgotPasswordRespo
     };
   }
 }; 
+
+// Sign up with backend API
+export async function signUp(formData: RegistrationFormData): Promise<RegistrationResponse> {
+  try {
+    const requestBody = {
+      email: formData.email,
+      password: formData.password,
+      fullName: formData.fullName,
+      displayName: formData.displayName,
+      preferredSports: formData.preferredSports,
+      skillLevel: formData.skillLevel,
+      zipCode: formData.zipCode,
+      confirmEmail: formData.confirmEmail,
+      confirmPassword: formData.confirmPassword
+    };
+
+    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    const data: RegistrationResponse = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Sign up failed');
+    }
+
+    return data;
+  } catch (error: any) {
+    throw new Error(error.message || 'Sign up failed. Please try again.');
+  }
+}
+
+// Sign in with email and password (placeholder for future implementation)
+export async function signIn(email: string, password: string): Promise<any> {
+  try {
+    // TODO: Implement backend sign-in endpoint
+    throw new Error('Sign in not implemented yet');
+  } catch (error: any) {
+    throw new Error('Sign in failed. Please try again.');
+  }
+}
+
+// Sign out (placeholder for future implementation)
+export async function signOut(): Promise<void> {
+  try {
+    // TODO: Implement backend sign-out endpoint
+    throw new Error('Sign out not implemented yet');
+  } catch (error: any) {
+    throw new Error('Sign out failed. Please try again.');
+  }
+}
+
+// Send password reset email (placeholder for future implementation)
+export async function resetPassword(email: string): Promise<void> {
+  try {
+    // TODO: Implement backend password reset endpoint
+    throw new Error('Password reset not implemented yet');
+  } catch (error: any) {
+    throw new Error('Failed to send reset email. Please try again.');
+  }
+}
