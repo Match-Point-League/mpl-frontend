@@ -20,7 +20,7 @@ export const forgotPassword = async (email: string): Promise<ForgotPasswordRespo
     
     return {
       success: true,
-      message: 'Password reset email sent successfully. Please check your inbox.'
+      message: 'If an account with this email address exists, you will receive a password reset email shortly.'
     };
   } catch (error: any) {
     console.error('Forgot password error:', error);

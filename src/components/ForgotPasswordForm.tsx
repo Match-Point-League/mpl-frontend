@@ -17,7 +17,7 @@ const ForgotPasswordForm: React.FC = () => {
       const result: ForgotPasswordResponse = await forgotPassword(email);
       
       if (result.success) {
-        setMessage(result.message || 'Password reset email sent successfully!');
+        setMessage(result.message || "If an account with this email address exists, you will receive a password reset email shortly.");
         setEmail(''); // Clear the form
       } else {
         setError(result.error || 'Failed to send password reset email');
