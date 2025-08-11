@@ -1,19 +1,6 @@
 import React, { useState } from 'react';
-import apiClient from '../config/api';
-
-// Define the sign-in response type to match backend
-interface SignInResponseData {
-  success: boolean;
-  message?: string;
-  error?: string;
-  token?: string;
-  user?: {
-    id: string;
-    email: string;
-    name: string;
-    displayName: string;
-  };
-}
+import { signIn } from '../services/authService';
+import { AuthUser } from '../types';
 
 const SignInForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -28,53 +15,25 @@ const SignInForm: React.FC = () => {
 
     try {
       console.log('Attempting sign-in with:', { email, password: '***' });
-      const response = await apiClient.post<SignInResponseData>('/auth/signin', { email, password });
-      console.log('Sign-in response received:', response);
+      // Use our new sign-in service
+      const user: AuthUser = await signIn(email, password);
+      console.log('Sign-in successful, user data:', user);
 
-      if (response.success && response.data?.token) {
-        // Store the token if the backend returns one
-        localStorage.setItem('authToken', response.data.token);
-        
-        // Redirect to dashboard or home page after successful sign in
-        window.location.href = '/';
-      } else {
-        // Handle unsuccessful response
-        setError(response.error || 'Sign in failed. Please try again.');
-      }
+      // Store both user data and token
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('authToken', user.token);
+      
+      // Redirect to dashboard or home page after successful sign in
+      window.location.href = '/';
     } catch (err: any) {
       console.error('Sign in error:', err);
       
-      // Handle different types of errors gracefully
+      // Handle errors from our service
       let userFriendlyError = 'Failed to sign in. Please try again.';
       
-      if (err.response) {
-        // Server responded with error status
-        const status = err.response.status;
-        console.log('Error response status:', status, 'Data:', err.response.data);
-        
-        if (status === 401) {
-          userFriendlyError = 'Invalid email or password. Please try again.';
-        } else if (status === 404) {
-          userFriendlyError = 'No account found with this email address.';
-        } else if (status === 400) {
-          userFriendlyError = 'Please check your email and password format.';
-        } else if (status === 500) {
-          userFriendlyError = 'Server error. Please try again later.';
-        }
-      } else if (err.request) {
-        // Network error - no response received
-        console.log('Network error - no response received:', err.request);
-        userFriendlyError = 'Network error. Please check your connection and try again.';
-      } else if (err.message) {
-        // Other error with message
-        console.log('Other error:', err.message);
-        if (err.message.includes('Invalid credentials')) {
-          userFriendlyError = 'Invalid email or password. Please try again.';
-        } else if (err.message.includes('User not found')) {
-          userFriendlyError = 'No account found with this email address.';
-        } else if (err.message.includes('Invalid email')) {
-          userFriendlyError = 'Please enter a valid email address.';
-        }
+      if (err.message) {
+        // Use the specific error message from our service
+        userFriendlyError = err.message;
       }
       
       setError(userFriendlyError);

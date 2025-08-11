@@ -11,6 +11,7 @@ export interface AuthUser {
   email: string;
   name: string;
   displayName: string;
+  token: string;
 }
 
 export interface HealthCheckResponse {
