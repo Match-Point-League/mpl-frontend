@@ -112,7 +112,7 @@ export const useSignUpForm = () => {
         setSuccess(response.message || 'Account created successfully!');
         // Reset form on success
         setFormData(defaultFormState);
-        // You can now access userId if needed: data.data.userId
+        // You can now access userId if needed: response.data.userId
       } else {
         // Handle backend validation errors
         if (response.data?.validationErrors) {
