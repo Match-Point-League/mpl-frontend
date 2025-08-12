@@ -1,7 +1,8 @@
 import React from 'react';
 import SignInForm from '../components/SignInForm';
+import { Link } from 'react-router-dom';
 
-const SignInPage: React.FC = () => {
+export const SignInPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -16,10 +17,20 @@ const SignInPage: React.FC = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <SignInForm />
+          
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              Don't have an account?{' '}
+              <Link 
+                to="/signup" 
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Sign up here
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
 };
-
-export default SignInPage; 
