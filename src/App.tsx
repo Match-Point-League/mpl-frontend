@@ -2,6 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import { HealthCheckResponse } from './types/apiTypes';
+
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { SignUpPage } from './pages/SignUpPage';
 import { SignInPage } from './pages/SignInPage';
 
@@ -22,6 +24,7 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signin" element={<SignInPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/" element={
             <div className="min-h-screen bg-gray-50">
               <header className="bg-white shadow">
