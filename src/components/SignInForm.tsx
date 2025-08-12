@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { signIn } from '../services/authService';
 import { AuthUser } from '../types';
+import { Link } from 'react-router-dom';
+
 
 const SignInForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -127,12 +129,9 @@ const SignInForm: React.FC = () => {
 
       {/* Forgot Password Link */}
       <div className="text-center">
-        <a
-          href="/forgot-password"
-          className="text-sm text-indigo-600 hover:text-indigo-500"
-        >
+        <Link to="/forgot-password" className="text-sm text-indigo-600 hover:text-indigo-500">
           Forgot your password?
-        </a>
+        </Link>
       </div>
     </form>
   );
