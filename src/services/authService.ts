@@ -14,7 +14,8 @@ export async function signUp(formData: RegistrationFormData): Promise<Registrati
       skillLevel: formData.skillLevel,
       zipCode: formData.zipCode,
       confirmEmail: formData.confirmEmail,
-      confirmPassword: formData.confirmPassword
+      confirmPassword: formData.confirmPassword,
+      role: 'player' // Default role for new users
     };
 
     const response = await fetch(`${API_BASE_URL}/auth/signup`, {
