@@ -60,6 +60,9 @@ function App() {
                   <Link to="/signup" className="text-blue-600 hover:text-blue-800">
                     Sign Up
                   </Link>
+                  <Link to="/signin" className="text-blue-600 hover:text-blue-800">
+                    Sign In
+                  </Link>
                 </nav>
               </div>
             </div>
