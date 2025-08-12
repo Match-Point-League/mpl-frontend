@@ -18,11 +18,20 @@ export interface RegistrationFormData {
 /**
  * Registration API response
  */
+export type SignUpResponseData = {
+  userId?: string;
+  validationErrors?: ValidationErrors;
+};
+
+/**
+ * Registration API response - matches backend structure
+ */
 export interface RegistrationResponse {
   success: boolean;
   message?: string;
   error?: string;
-  validationErrors?: ValidationErrors;
+  data: SignUpResponseData;
+  timestamp: string;
 }
 
 // Re-export for backward compatibility
