@@ -84,6 +84,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/signin" element={<SignInPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             </Routes>
           </main>
         </div>
