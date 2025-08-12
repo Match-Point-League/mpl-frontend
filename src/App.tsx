@@ -83,6 +83,7 @@ function App() {
               } />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/signin" element={<SignInPage />} />
             </Routes>
           </main>
         </div>
