@@ -2,8 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import { HealthCheckResponse } from './types/apiTypes';
-import SignUpPage from './pages/SignUpPage';
-import SignInPage from './pages/SignInPage';
+import { SignUpPage } from './pages/SignUpPage';
+import { SignInPage } from './pages/SignInPage';
 
 // Initialize React Query client
 const queryClient = new QueryClient({
