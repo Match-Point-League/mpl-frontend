@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { forgotPassword, ForgotPasswordResponse } from '../services/authService';
 
 const ForgotPasswordForm: React.FC = () => {
@@ -88,12 +89,12 @@ const ForgotPasswordForm: React.FC = () => {
 
           {/* Back to Sign In */}
           <div className="text-center">
-            <a
-              href="/signin"
+            <Link
+              to="/signin"
               className="text-sm text-indigo-600 hover:text-indigo-500"
             >
               Back to Sign In
-            </a>
+            </Link>
           </div>
         </form>
       </div>
