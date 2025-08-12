@@ -16,7 +16,7 @@ export interface RegistrationFormData {
 }
 
 /**
- * Clean response data for sign-up endpoint - contains only essential fields
+ * Registration API response
  */
 export type SignUpResponseData = {
   userId?: string;
