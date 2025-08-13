@@ -20,28 +20,7 @@ const SignInForm: React.FC = () => {
   };
 
   const mapErrorToUserMessage = (error: any): string => {
-    if (!error.message) {
-      return 'Failed to sign in. Please try again.';
-    }
-
-    const invalidPassword = 'Invalid email or password. Please try again.';
-    const noAccountFound = 'No account found with this email address';
-    const invalidEmail = 'Please enter a valid email address';
-    const tooManyFailedAttempts = 'Too many failed attempts. Please try again later.';
-
-    // Map specific error messages to user-friendly text
-    switch (error.message) {
-      case invalidPassword:
-        return invalidPassword;
-      case noAccountFound:
-        return noAccountFound;
-      case invalidEmail:
-        return invalidEmail;
-      case tooManyFailedAttempts:
-        return tooManyFailedAttempts;
-      default:
-        return error.message;
-    }
+    return error.message || 'Failed to sign in. Please try again.';
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
