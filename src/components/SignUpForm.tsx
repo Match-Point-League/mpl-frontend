@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateDisplayNameOptions, getSkillLevelDescription } from '../utils/registrationFormUtils';
+import { generateDisplayNameOptions, getSkillLevelDescription } from '../utils/signUpFormUtils';
 import { useSignUpForm } from '../hooks/useSignUpForm';
 import '../styles/signUp.css';
 

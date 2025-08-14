@@ -1,9 +1,9 @@
 import { ValidationErrors } from './validationTypes';
 
 /**
- * Registration form data structure for user sign-up
+ * Sign up form data structure for user sign-up
  */
-export interface RegistrationFormData {
+export interface SignUpFormData {
   fullName: string;
   email: string;
   confirmEmail: string;
@@ -16,7 +16,7 @@ export interface RegistrationFormData {
 }
 
 /**
- * Registration API response
+ * Sign up API response
  */
 export type SignUpResponseData = {
   userId?: string;
@@ -24,9 +24,9 @@ export type SignUpResponseData = {
 };
 
 /**
- * Registration API response - matches backend structure
+ * Sign up API response - matches backend structure
  */
-export interface RegistrationResponse {
+export interface SignUpResponse {
   success: boolean;
   message?: string;
   error?: string;
@@ -35,4 +35,4 @@ export interface RegistrationResponse {
 }
 
 // Re-export for backward compatibility
-export type RegistrationErrors = ValidationErrors; 
+export type SignUpErrors = ValidationErrors; 

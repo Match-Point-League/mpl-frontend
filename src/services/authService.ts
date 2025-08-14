@@ -1,6 +1,6 @@
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/firebase";
-import { RegistrationFormData, RegistrationResponse, AuthUser, ApiResponse } from "../types";
+import { SignUpFormData, SignUpResponse, AuthUser, ApiResponse } from "../types";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
 
@@ -44,7 +44,7 @@ export const forgotPassword = async (email: string): Promise<ForgotPasswordRespo
 }; 
 
 // Sign up with backend API
-export async function signUp(formData: RegistrationFormData): Promise<RegistrationResponse> {
+export async function signUp(formData: SignUpFormData): Promise<SignUpResponse> {
   try {
     const requestBody = {
       email: formData.email,
@@ -66,7 +66,7 @@ export async function signUp(formData: RegistrationFormData): Promise<Registrati
       body: JSON.stringify(requestBody),
     });
 
-    const data: RegistrationResponse = await response.json();
+    const data: SignUpResponse = await response.json();
 
     if (!response.ok) {
       throw new Error(data.error || 'Sign up failed');

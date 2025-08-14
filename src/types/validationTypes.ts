@@ -3,7 +3,7 @@
  */
 
 /**
- * Validation errors for registration form
+ * Validation errors for sign up form
  */
 export interface ValidationErrors {
   fullName?: string;
