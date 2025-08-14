@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { RegistrationFormData, RegistrationErrors } from '../types';
+import { SignUpFormData, SignUpErrors } from '../types';
 import { signUp } from '../services/authService';
 
 // Default form state
-const defaultFormState: RegistrationFormData = {
+const defaultFormState: SignUpFormData = {
   fullName: '',
   email: '',
   confirmEmail: '',
@@ -16,13 +16,13 @@ const defaultFormState: RegistrationFormData = {
 };
 
 export const useSignUpForm = () => {
-  const [formData, setFormData] = useState<RegistrationFormData>(defaultFormState);
-  const [errors, setErrors] = useState<RegistrationErrors>({});
+  const [formData, setFormData] = useState<SignUpFormData>(defaultFormState);
+  const [errors, setErrors] = useState<SignUpErrors>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
 
   // Centralized error handling function
-  const handleError = (error: string, field?: keyof RegistrationErrors) => {
+  const handleError = (error: string, field?: keyof SignUpErrors) => {
     if (field) {
       setErrors(prev => ({
         ...prev,
@@ -37,7 +37,7 @@ export const useSignUpForm = () => {
   };
 
   // Clear specific error
-  const clearError = (field: keyof RegistrationErrors) => {
+  const clearError = (field: keyof SignUpErrors) => {
     setErrors(prev => ({
       ...prev,
       [field]: undefined
@@ -56,8 +56,8 @@ export const useSignUpForm = () => {
     }));
     
     // Clear error when user starts typing
-    if (errors[name as keyof RegistrationErrors]) {
-      clearError(name as keyof RegistrationErrors);
+    if (errors[name as keyof SignUpErrors]) {
+      clearError(name as keyof SignUpErrors);
     }
   };
 
@@ -106,18 +106,19 @@ export const useSignUpForm = () => {
 
     try {
       // Send raw form data to backend - let backend handle all validation
-      const data = await signUp(formData);
+      const response = await signUp(formData);
 
-      if (data.success) {
-        setSuccess(data.message || 'Account created successfully!');
+      if (response.success) {
+        setSuccess(response.message || 'Account created successfully!');
         // Reset form on success
         setFormData(defaultFormState);
+        // You can now access userId if needed: response.data.userId
       } else {
         // Handle backend validation errors
-        if (data.validationErrors) {
-          setErrors(data.validationErrors);
+        if (response.data?.validationErrors) {
+          setErrors(response.data.validationErrors);
         } else {
-          handleError(data.error || 'Sign up failed');
+          handleError(response.error || 'Sign up failed');
         }
       }
     } catch (err: any) {

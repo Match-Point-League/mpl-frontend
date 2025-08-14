@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import { HealthCheckResponse } from './types/apiTypes';
-import { Dashboard, SignUpPage } from './pages';
+import { ForgotPasswordPage, Dashboard,  SignUpPage, SignInPage } from './pages';
+import { useState, useEffect } from 'react';
 
 // Initialize React Query client
 const queryClient = new QueryClient({
@@ -60,6 +60,9 @@ function App() {
                   <Link to="/signup" className="text-blue-600 hover:text-blue-800">
                     Sign Up
                   </Link>
+                  <Link to="/signin" className="text-blue-600 hover:text-blue-800">
+                    Sign In
+                  </Link>
                 </nav>
               </div>
             </div>
@@ -73,12 +76,15 @@ function App() {
                       <p className="text-gray-500">
                         Infrastructure setup complete. Ready for feature development.
                       </p>
+
                     </div>
                   </div>
                 </div>
               } />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/signin" element={<SignInPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             </Routes>
           </main>
         </div>

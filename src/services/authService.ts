@@ -1,9 +1,50 @@
-import { RegistrationFormData, RegistrationResponse } from "../types";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../config/firebase";
+import { SignUpFormData, SignUpResponse, AuthUser, ApiResponse } from "../types";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/v1';
 
+
+export interface ForgotPasswordResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
+
+export const forgotPassword = async (email: string): Promise<ForgotPasswordResponse> => {
+  try {
+    if (!auth) {
+      throw new Error('Firebase authentication not configured');
+    }
+
+    await sendPasswordResetEmail(auth, email);
+    
+    return {
+      success: true,
+      message: 'If an account with this email address exists, you will receive a password reset email shortly.'
+    };
+  } catch (error: any) {
+    console.error('Forgot password error:', error);
+    
+    let userFriendlyError = 'Failed to send password reset email. Please try again.';
+    
+    if (error.code === 'auth/user-not-found') {
+      userFriendlyError = 'No account found with this email address.';
+    } else if (error.code === 'auth/invalid-email') {
+      userFriendlyError = 'Please enter a valid email address.';
+    } else if (error.code === 'auth/too-many-requests') {
+      userFriendlyError = 'Too many requests. Please try again later.';
+    }
+    
+    return {
+      success: false,
+      error: userFriendlyError
+    };
+  }
+}; 
+
 // Sign up with backend API
-export async function signUp(formData: RegistrationFormData): Promise<RegistrationResponse> {
+export async function signUp(formData: SignUpFormData): Promise<SignUpResponse> {
   try {
     const requestBody = {
       email: formData.email,
@@ -25,7 +66,7 @@ export async function signUp(formData: RegistrationFormData): Promise<Registrati
       body: JSON.stringify(requestBody),
     });
 
-    const data: RegistrationResponse = await response.json();
+    const data: SignUpResponse = await response.json();
 
     if (!response.ok) {
       throw new Error(data.error || 'Sign up failed');
@@ -37,13 +78,30 @@ export async function signUp(formData: RegistrationFormData): Promise<Registrati
   }
 }
 
-// Sign in with email and password (placeholder for future implementation)
-export async function signIn(email: string, password: string): Promise<any> {
+// Sign in with email and password
+export async function signIn(email: string, password: string): Promise<AuthUser> {
   try {
-    // TODO: Implement backend sign-in endpoint
-    throw new Error('Sign in not implemented yet');
+    const response = await fetch(`${API_BASE_URL}/auth/signin`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data: ApiResponse<AuthUser> = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Sign in failed');
+    }
+
+    if (!data.success || !data.data) {
+      throw new Error(data.error || 'Sign in failed');
+    }
+
+    return data.data; // This is the AuthUser object
   } catch (error: any) {
-    throw new Error('Sign in failed. Please try again.');
+    throw new Error(error.message || 'Sign in failed. Please try again.');
   }
 }
 

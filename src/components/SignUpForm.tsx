@@ -1,6 +1,6 @@
 import React from 'react';
+import { generateDisplayNameOptions, getSkillLevelDescription } from '../utils/signUpFormUtils';
 import { useSignUpForm } from '../hooks/useSignUpForm';
-import { generateDisplayNameOptions, getSkillLevelDescription } from '../utils/registrationFormUtils';
 import '../styles/signUp.css';
 
 const SignUpForm: React.FC = () => {
