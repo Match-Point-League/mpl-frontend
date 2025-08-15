@@ -1,17 +1,17 @@
 import React from 'react';
-import { User, Match, getUserById, getCourtById } from '@/pages/dashboard/dashboardData';
+import { Match, getUserById, getCourtById } from '@/pages/dashboard/dashboardData';
 import { formatDate } from '@/utils/formatUtils';
-import ScoreGrid from './ScoreGrid';
-import { MatchStatus } from '@/types';
+import { ScoreGrid } from './ScoreGrid';
+import { MatchStatus, UserProfile } from '@/types';
 
 interface MatchesTabProps {
-  currentUser: User;
+  currentUser: UserProfile;
   pastMatches: Match[];
   upcomingMatches: Match[];
   onNotImplemented: (feature: string) => void;
 }
 
-const MatchesTab: React.FC<MatchesTabProps> = ({ 
+export const MatchesTab: React.FC<MatchesTabProps> = ({ 
   currentUser, 
   pastMatches, 
   upcomingMatches, 

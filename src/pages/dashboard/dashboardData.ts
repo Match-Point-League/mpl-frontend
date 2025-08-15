@@ -1,4 +1,4 @@
-import { MatchStatus, MatchType, PreferredSport, Sport } from "@/types";
+import { MatchStatus, MatchType, SportOptions, Sport } from "@/types";
 
 export interface User {
   id: string;
@@ -6,7 +6,7 @@ export interface User {
   name: string;
   display_name: string;
   skill_level: number;
-  preferred_sport: PreferredSport;
+  preferred_sport: SportOptions;
   is_competitive: boolean;
   city: string;
   zip_code: string;
@@ -62,7 +62,7 @@ export const sampleUser: User = {
   name: 'Alex Johnson',
   display_name: 'Alex J.',
   skill_level: 3.5,
-  preferred_sport: PreferredSport.TENNIS,
+  preferred_sport: SportOptions.TENNIS,
   is_competitive: true,
   city: 'San Francisco',
   zip_code: '94102',
@@ -111,7 +111,7 @@ export const sampleUsers: User[] = [
     name: 'Sarah Wilson',
     display_name: 'Sarah W.',
     skill_level: 4.0,
-    preferred_sport: PreferredSport.TENNIS,
+    preferred_sport: SportOptions.TENNIS,
     is_competitive: false,
     city: 'San Francisco',
     zip_code: '94103',
@@ -125,7 +125,7 @@ export const sampleUsers: User[] = [
     name: 'Mike Chen',
     display_name: 'Mike C.',
     skill_level: 3.0,
-    preferred_sport: PreferredSport.PICKLEBALL,
+    preferred_sport: SportOptions.PICKLEBALL,
     is_competitive: true,
     city: 'San Francisco',
     zip_code: '94110',

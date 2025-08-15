@@ -6,7 +6,7 @@ interface ScoreGridProps {
   match: Match;
 }
 
-const ScoreGrid: React.FC<ScoreGridProps> = ({ match }) => {
+export const ScoreGrid: React.FC<ScoreGridProps> = ({ match }) => {
   if (!match.score?.sets || match.score.sets.length === 0) {
     return (
       <div className="score-grid">
