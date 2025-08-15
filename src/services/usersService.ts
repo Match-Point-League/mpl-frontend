@@ -3,6 +3,18 @@ import { UpdateUserInput, UserProfile } from '@/types';
 
 export class UsersService {
   /**
+   * Fetch the current user's profile
+   * @returns Promise with the user profile data
+   */
+  public static async getProfile(): Promise<UserProfile> {
+    const response = await apiClient.get<{ user: UserProfile }>('/users/profile');
+    if (response.success && response.data) {
+      return response.data!.user as UserProfile;
+    }
+    throw new Error(response.error);
+  }
+
+  /**
    * Update user profile information
    * @param updateData - The user data to update
    * @returns Promise with the updated user data
