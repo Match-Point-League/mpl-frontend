@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { User, UpdateUserInput, SportOptions } from '@/types';
+import { UserProfile, UpdateUserInput, SportOptions } from '@/types';
 import { UsersService } from '@/services/usersService';
 import { signOut, resetPassword } from '@/services/authService';
 import { useNavigate } from 'react-router-dom';
 
 interface ProfileTabProps {
-  currentUser: User;
-  onUserUpdate?: (updatedUser: User) => void;
+  currentUser: UserProfile;
+  onUserUpdate?: (updatedUser: UserProfile) => void;
 }
 
 const ProfileTab: React.FC<ProfileTabProps> = ({ currentUser, onUserUpdate }) => {

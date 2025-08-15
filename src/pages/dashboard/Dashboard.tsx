@@ -3,17 +3,21 @@ import { sampleUser, sampleMatches, getUserStats } from './dashboardData';
 import ProfileTab from '@/components/dashboard/ProfileTab';
 import MatchesTab from '@/components/dashboard/MatchesTab';
 import '@/styles/dashboard.css';
-import { MatchStatus } from '@/types';
+import { MatchStatus, UserProfile } from '@/types';
 
 export const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'profile' | 'matches'>('profile');
-  const currentUser = sampleUser;
+  const [currentUser, setCurrentUser] = useState<UserProfile>(sampleUser);
   const stats = getUserStats();
   const matches = sampleMatches;
 
   const handleNotImplemented = (feature: string) => {
     console.log(`${feature} feature is being implemented`);
     alert(`${feature} feature is being implemented`);
+  };
+
+  const handleUserUpdate = (updatedUser: UserProfile) => {
+    setCurrentUser(updatedUser);
   };
 
   const pastMatches = matches.filter(match => 
@@ -83,7 +87,7 @@ export const Dashboard: React.FC = () => {
           {activeTab === 'profile' && (
             <ProfileTab 
               currentUser={currentUser} 
-              onNotImplemented={handleNotImplemented} 
+              onUserUpdate={handleUserUpdate}
             />
           )}
 
