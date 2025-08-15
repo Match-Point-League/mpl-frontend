@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { sampleUser, sampleMatches, getUserStats } from './dashboardData';
-import ProfileTab from '@/components/dashboard/ProfileTab';
-import MatchesTab from '@/components/dashboard/MatchesTab';
+import { ProfileTab, MatchesTab } from '@/components/dashboard';
 import '@/styles/dashboard.css';
 import { MatchStatus, UserProfile } from '@/types';
+import { UsersService } from '@/services/usersService';
 
 export const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'profile' | 'matches'>('profile');
   const [currentUser, setCurrentUser] = useState<UserProfile>(sampleUser);
   const stats = getUserStats();
   const matches = sampleMatches;
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const userProfile = await UsersService.getProfile();
+        setCurrentUser(userProfile);
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+    fetchUserProfile();
+  }, []);
+  
+  useEffect(() => {
+    console.log('Fetching user matches');
+  }, []);
 
   const handleNotImplemented = (feature: string) => {
     console.log(`${feature} feature is being implemented`);
