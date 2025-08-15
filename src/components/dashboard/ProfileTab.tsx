@@ -9,7 +9,7 @@ interface ProfileTabProps {
   onUserUpdate?: (updatedUser: UserProfile) => void;
 }
 
-const ProfileTab: React.FC<ProfileTabProps> = ({ currentUser, onUserUpdate }) => {
+export const ProfileTab: React.FC<ProfileTabProps> = ({ currentUser, onUserUpdate }) => {
   const navigate = useNavigate();
   
   const [profileData, setProfileData] = useState<UpdateUserInput>({
